@@ -1,0 +1,8 @@
+#!/bin/sh
+# Run swiftformat before pushing
+make format
+
+if ! git diff --quiet; then
+  echo "swiftformat made changes. Please review and commit them before pushing."
+  exit 1
+fi

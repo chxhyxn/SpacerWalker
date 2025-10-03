@@ -1,9 +1,4 @@
-//
-//  SpacerWalkerApp.swift
-//  SpacerWalker
-//
-//  Created by Sean Cho on 10/4/25.
-//
+//  Copyright © 2025 NASA INTERNATIONAL SPACE APPS CHALLENGE Team SPACEWALK. All rights reserved.
 
 import SwiftUI
 
@@ -11,7 +6,7 @@ import SwiftUI
 struct SpacerWalkerApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            IntroView()
         }
     }
 }

@@ -1,7 +1,7 @@
 //  Copyright © 2025 NASA INTERNATIONAL SPACE APPS CHALLENGE Team SPACEWALK. All rights reserved.
 
 import AVFoundation
-import Combine
+internal import Combine
 import SwiftUI
 
 @MainActor

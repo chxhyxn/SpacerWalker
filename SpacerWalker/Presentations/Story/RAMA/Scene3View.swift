@@ -37,6 +37,15 @@ struct Scene3View: View {
                         .resizable()
                         .scaledToFill()
 
+                    if isNarrationEnded {
+                        YearPickerView(value: $value, dragOffset: $dragOffset)
+
+                        Image("earth")
+                            .resizable()
+                            .frame(width: 110, height: 110)
+                            .position(x: circleX, y: circleY)
+                    }
+
                     ZStack {
                         Image("sunWithSpot1")
                         Image("sunWithSpot2").opacity(opacity2)
@@ -58,6 +67,7 @@ struct Scene3View: View {
                             .position(x: geo.size.width - 60, y: geo.size.height / 2)
                     }
                 }
+                .navigationBarBackButtonHidden()
                 .contentShape(Rectangle())
                 .gesture(
                     DragGesture(minimumDistance: 0)
@@ -73,19 +83,13 @@ struct Scene3View: View {
                         }
                 )
 
-                if isNarrationEnded {
-                    YearPickerView(value: $value, dragOffset: $dragOffset)
-
-                    Image("earth")
-                        .resizable()
-                        .frame(width: 110, height: 110)
-                        .position(x: circleX, y: circleY)
-                }
-
                 if showGuide {
                     InteractionGuideView()
                         .transition(.opacity)
                 }
+
+                NextButton(destination: Scene4View(path: $path))
+                    .position(x: geo.size.width - 60, y: geo.size.height / 2)
             }
 
             VStack {

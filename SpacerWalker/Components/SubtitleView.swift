@@ -19,17 +19,19 @@ struct SubtitleView: View {
     
     var body: some View {
         Text(displayed)
-            .font(.oneMobileRegular38)
+            .font(.oneMobile38)
+            .foregroundStyle(.white)
             .multilineTextAlignment(.leading)
             .frame(maxWidth: .infinity, alignment: .center)
             .frame(height: 134)
-            .frame(maxWidth: .infinity)
-            .background(
+            .padding(.horizontal, 24)
+            .background(.ultraThinMaterial)
+            .overlay {
                 RoundedRectangle(cornerRadius: 20, style: .continuous)
-                    .fill(Color(red: 166.0/255.0, green: 166.0/255.0, blue: 166.0/255.0).opacity(0.2))
+                    .fill(.narrationBackground)
                     .stroke(.white, lineWidth: 1)
-                    .shadow(color: .black.opacity(0.25), radius: 8, x: 0, y: 4)
-            )
+                    .shadow(color: .white.opacity(0.2), radius: 40, x: 0, y: 0)
+            }
             .onAppear { startTyping() }
     }
     

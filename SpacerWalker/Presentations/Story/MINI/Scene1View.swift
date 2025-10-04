@@ -11,13 +11,22 @@ struct Scene1View: View {
     ]
 
     var body: some View {
-        SubtitleView(
-            sentences: narration,
-            typingSpeeds: [0.11, 0.08, 0.06],
-            holdDurations: [0.8, 0.3]
-        )
-        NavigationLink(destination: Scene2View(path: $path)) {
-            Text("다음")
+        ZStack {
+            Color.black.edgesIgnoringSafeArea(.all)
+            
+            VStack {
+                NavigationLink(destination: Scene2View(path: $path)) {
+                    Text("다음")
+                        .font(.oneMobile100)
+                        .foregroundStyle(.white)
+                }
+                                
+                SubtitleView(
+                    sentences: narration,
+                    typingSpeeds: [0.11, 0.07, 0.06],
+                    holdDurations: [0.8, 0.6]
+                )
+            }
         }
         .navigationBarBackButtonHidden()
         .autoNarration(.scene1)

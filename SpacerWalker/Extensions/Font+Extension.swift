@@ -3,5 +3,6 @@
 import SwiftUI
 
 extension Font {
-    static let oneMobile: Font = .custom("ONEMobilePOPRegular", size: 100)
+    static let oneMobile38: Font = .custom("ONEMobilePOPRegular", size: 38)
+    static let oneMobile100: Font = .custom("ONEMobilePOPRegular", size: 100)
 }

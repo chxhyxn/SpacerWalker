@@ -3,6 +3,11 @@
 import SwiftUI
 
 struct Scene3View: View {
+    private let narration: [String] = [
+        "The three friends dashed around the Solar System. ",
+        "And every 11 years, their powers grew much stronger!",
+    ]
+
     @Binding var path: [Route]
 
     @State private var value: Double = 0
@@ -56,13 +61,11 @@ struct Scene3View: View {
                     Image("sunWithSpot4").opacity(opacity4)
                         .position(x: geo.size.width / 2 + 16, y: geo.size.height)
 
-                    HStack(spacing: -25) {
-                        Image("family").resizable()
-                            .scaledToFit()
-                            .foregroundStyle(Color.white)
-                            .frame(width: 500)
-                    }
-                    .position(x: geo.size.width / 2, y: geo.size.height - 400)
+                    Image("family").resizable()
+                        .scaledToFit()
+                        .foregroundStyle(Color.white)
+                        .frame(width: 500)
+                        .position(x: geo.size.width / 2, y: geo.size.height - 400)
 
                     if currentValue >= 100 {
                         NextButton(destination: Scene4View(path: $path))
@@ -84,9 +87,22 @@ struct Scene3View: View {
                         }
                 )
             }
+
+            VStack {
+                Spacer()
+
+                SubtitleView(
+                    sentences: narration,
+                    typingSpeeds: [0.07, 0.07],
+                    holdDurations: [0.7]
+                )
+                .padding(.horizontal, 40)
+                .padding(.bottom, 43)
+            }
         }
         .background(Color.black.opacity(0.9))
         .ignoresSafeArea()
+        .autoNarration(.scene3)
     }
 }
 

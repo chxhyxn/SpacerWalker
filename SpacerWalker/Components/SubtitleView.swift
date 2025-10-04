@@ -57,14 +57,14 @@ struct SubtitleView: View {
             let gap = gapDurations[safe: index] ?? gapDuration
 
             DispatchQueue.main.asyncAfter(deadline: .now() + hold) {
-                displayed = ""
-                DispatchQueue.main.asyncAfter(deadline: .now() + gap) {
-                    index += 1
-                    if index < sentences.count {
+                index += 1
+                if index < sentences.count {
+                    displayed = ""
+                    DispatchQueue.main.asyncAfter(deadline: .now() + gap) {
                         typeNextCharacter()
-                    } else {
-                        isFinished = true
                     }
+                } else {
+                    isFinished = true
                 }
             }
         }

@@ -6,69 +6,76 @@ struct Scene14View: View {
     @State private var viewModel: Scene14ViewModel = .init()
     @State private var dragOffset: CGFloat = 0
     @State private var lastDragOffset: CGFloat = 0
-    @State private var isPlaying: Bool = false
+    @State private var progress: Double = 0.0
+    @State private var screenSize: CGSize = .zero
     private let initDragOffset: CGFloat = 100
 
     var body: some View {
-        ZStack(alignment: .bottom) {
-            // MARK: Sky
-            sky
+        GeometryReader { geo in
+            Color.clear
+                .onAppear {
+                    self.screenSize = geo.size
+                }
+                .onChange(of: geo.size) { _, newSize in
+                    self.screenSize = newSize
+                }
 
-            // MARK: Aurora
-            aurora
+            ZStack(alignment: .bottom) {
+                // MARK: Sky
+                sky
 
-            // MARK: Earth & People
-            GeometryReader { geo in
-                let w = geo.size.width
-                let h = geo.size.height
-                let r = w / 2
+                // MARK: Aurora
+                aurora
+
                 // MARK: Earth
                 Circle()
                     .foregroundColor(.blue)
-                    .position(x: r * 1.5, y: h * 1.2)
+                    .position(
+                        x: screenSize.width / 2 * 1.5,
+                        y: screenSize.height * 1.2
+                    )
+
+                // MARK: People
+                HStack {
+                    Spacer()
+
+                    Rectangle()
+                        .foregroundColor(.yellow)
+                        .frame(width: 100, height: 200)
+                        .padding(120)
+                }
+
+                // MARK: Slider
+                slider
             }
-
-            // MARK: People
-            HStack {
-                Spacer()
-
-                Rectangle()
-                    .foregroundColor(.yellow)
-                    .frame(width: 100, height: 200)
-                    .padding(120)
-            }
-
-            // MARK: Slider
-            slider
         }
         .ignoresSafeArea()
     }
 
     var sky: some View {
-        GeometryReader { geo in
-            Image("Aurora")
-                .resizable()
-                .scaledToFill()
-                .frame(
-                    width: geo.size.width,
-                    height: geo.size.height
-                )
-        }
+        Image("Aurora")
+            .resizable()
+            .scaledToFill()
+            .frame(
+                width: screenSize.width,
+                height: screenSize.height
+            )
     }
 
     var aurora: some View {
-        GeometryReader { geo in
-            VideoPlayer(path: "Aurora", isPlaying: $isPlaying)
-                .mask {
-                    HStack {
-                        Spacer()
-                        Rectangle()
-                            .frame(
-                                width: dragOffset + initDragOffset,
-                                height: .infinity
-                            )
-                    }
-                }
+        VideoFramePlayer(
+            path: "Aurora",
+            progress: $progress
+        )
+        .mask {
+            HStack {
+                Spacer()
+                Rectangle()
+                    .frame(
+                        width: dragOffset + initDragOffset,
+                        height: .infinity
+                    )
+            }
         }
     }
 
@@ -79,16 +86,21 @@ struct Scene14View: View {
                 DragGesture()
                     .onChanged { value in
                         let w = value.translation.width
-                        isPlaying = true
-                        dragOffset = max(
-                            0,
-                            lastDragOffset - w
+                        dragOffset = (lastDragOffset - w).clamped(
+                            to: 0...(screenSize.width - initDragOffset + 10)
                         )
+                        progress = dragOffset / screenSize.width
                     }
                     .onEnded { _ in
                         lastDragOffset = dragOffset
                     }
             )
+    }
+}
+
+extension Comparable {
+    func clamped(to limits: ClosedRange<Self>) -> Self {
+        min(max(self, limits.lowerBound), limits.upperBound)
     }
 }
 

@@ -3,6 +3,11 @@
 import SwiftUI
 
 struct Scene3View: View {
+    private let narration: [String] = [
+        "The three friends dashed around the Solar System. ",
+        "And every 11 years, their powers grew much stronger!"
+    ]
+    
     @Binding var path: [Route]
     
     @State private var value: Double = 0
@@ -82,9 +87,22 @@ struct Scene3View: View {
                         }
                 )
             }
+            
+            VStack {
+                Spacer()
+                
+                SubtitleView(
+                    sentences: narration,
+                    typingSpeeds: [0.07, 0.07],
+                    holdDurations: [0.7]
+                )
+                .padding(.horizontal, 40)
+                .padding(.bottom, 43)
+            }
         }
         .background(Color.black.opacity(0.9))
         .ignoresSafeArea()
+        .autoNarration(.scene3)
     }
 }
 

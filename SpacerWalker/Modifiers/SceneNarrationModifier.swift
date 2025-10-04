@@ -4,14 +4,27 @@ import SwiftUI
 
 struct SceneNarrationModifier: ViewModifier {
     let narration: Narration
+    var delay: Double = 0
+    
     func body(content: Content) -> some View {
         content
-            .onAppear { AudioService.shared.playNarration(narration) }
+            .onAppear {
+                if delay > 0 {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                        AudioService.shared.playNarration(narration)
+                    }
+                } else {
+                    AudioService.shared.playNarration(narration)
+                }
+            }
     }
 }
 
 extension View {
-    func autoNarration(_ narration: Narration) -> some View {
-        modifier(SceneNarrationModifier(narration: narration))
+    func autoNarration(
+        _ narration: Narration,
+        delay: Double = 0
+    ) -> some View {
+        modifier(SceneNarrationModifier(narration: narration, delay: delay))
     }
 }

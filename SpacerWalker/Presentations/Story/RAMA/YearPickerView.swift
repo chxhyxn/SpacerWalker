@@ -19,7 +19,7 @@ struct YearPickerView: View {
                     VStack(spacing: 25) {
                         ForEach(years, id: \.self) { year in
                             Text(String(year))
-                                .font(.oneMobile)
+                                .font(.oneMobile100)
                                 .fontWeight(.bold)
                                 .foregroundColor(.white)
                                 .frame(height: itemHeight)

@@ -16,7 +16,7 @@ struct SubtitleView: View {
     @State private var index: Int = 0
     @State private var displayed: String = ""
     @State private var isFinished: Bool = false
-    
+
     var body: some View {
         Text(displayed)
             .font(.oneMobile38)
@@ -35,7 +35,6 @@ struct SubtitleView: View {
             }
             .shadow(color: .white.opacity(0.2), radius: 40, x: 0, y: 0)
             .onAppear { startTyping() }
-
     }
 
     private func startTyping() {

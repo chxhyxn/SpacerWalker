@@ -1,9 +1,8 @@
 //  Copyright © 2025 NASA INTERNATIONAL SPACE APPS CHALLENGE Team SPACEWALK. All rights reserved.
 
-
+import CoreGraphics
 import CoreMotion
 import Foundation
-import CoreGraphics
 
 final class MotionManager {
     let shakeDegreesStream: AsyncStream<Int>
@@ -14,11 +13,11 @@ final class MotionManager {
 
     private let updateInterval: TimeInterval
     private var shakeCooldown: TimeInterval
-    private var _lastShakeAt: Date  // .now()랑 coolDown만큼 차이나는지 비교되는지 변수
+    private var _lastShakeAt: Date // .now()랑 coolDown만큼 차이나는지 비교되는지 변수
 
     private let startThreshold: Double
     private let referenceFrame: CMAttitudeReferenceFrame
-    
+
     private let motionManager = CMMotionManager()
 
     init(
@@ -51,18 +50,17 @@ final class MotionManager {
     }
 
     func start(
-        shakeCooldown: TimeInterval = 0.01,
+        shakeCooldown: TimeInterval = 0.01
     ) {
         self.shakeCooldown = shakeCooldown
-        
+
         stopAll()
 
         motionManager.deviceMotionUpdateInterval = updateInterval
 
         guard motionManager.isDeviceMotionAvailable else { return }
 
-        motionManager.startDeviceMotionUpdates(using: referenceFrame, to: .main)
-        { [weak self] data, error in
+        motionManager.startDeviceMotionUpdates(using: referenceFrame, to: .main) { [weak self] data, _ in
             if let data {
                 self?.handleShakeDetection(from: data.userAcceleration)
                 self?.handleTilt(gravity: data.gravity)
@@ -86,7 +84,7 @@ final class MotionManager {
         let magnitude = sqrt(ax * ax + ay * ay)
 
         if magnitude >= startThreshold,
-            now.timeIntervalSince(_lastShakeAt) >= shakeCooldown
+           now.timeIntervalSince(_lastShakeAt) >= shakeCooldown
         {
             let degrees =
                 (Int((atan2(ay, ax) * -180.0 / .pi).rounded()) + 270) % 360

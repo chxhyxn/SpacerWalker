@@ -3,6 +3,7 @@
 import Foundation
 
 enum Narration: String, CaseIterable, Identifiable {
+    case scene0 = "Scene0Narration"
     case scene1 = "Scene1Narration"
     case scene2 = "Scene2Narration"
     case scene3 = "Scene3Narration"

@@ -5,7 +5,7 @@ import SwiftUI
 struct SubtitleView: View {
     let fullText: String
     let typingSpeed: Double
-    
+
     @State private var displayedText: String = ""
 
     init(fullText: String, typingSpeed: Double = 0.1) {
@@ -19,13 +19,13 @@ struct SubtitleView: View {
                 typeWriter()
             }
     }
-    
+
     private func typeWriter() {
         guard displayedText.count < fullText.count else { return }
-        
+
         let index = fullText.index(fullText.startIndex, offsetBy: displayedText.count)
         displayedText.append(fullText[index])
-        
+
         DispatchQueue.main.asyncAfter(deadline: .now() + typingSpeed) {
             typeWriter()
         }
@@ -36,10 +36,10 @@ struct SubtitleView: View {
     VStack(spacing: 30) {
         SubtitleView(fullText: "이것은 기본 속도 테스트입니다.")
             .font(.title)
-        
+
         SubtitleView(fullText: "이것은 빠른 속도 테스트입니다.", typingSpeed: 0.03)
             .font(.title)
-        
+
         SubtitleView(fullText: "이것은 느린 속도 테스트입니다.", typingSpeed: 0.25)
             .font(.title)
     }

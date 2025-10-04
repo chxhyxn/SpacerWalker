@@ -3,8 +3,13 @@
 import SwiftUI
 
 struct Scene3View: View {
+    private let narration: [String] = [
+        "The three friends dashed around the Solar System. ",
+        "And every 11 years, their powers grew much stronger!",
+    ]
+
     @Binding var path: [Route]
-    
+
     @State private var value: Double = 0
     @State private var dragOffset: CGFloat = 0
 
@@ -13,11 +18,11 @@ struct Scene3View: View {
             GeometryReader { geo in
                 let rawValue = value + Double(dragOffset / geo.size.width * 100)
                 let currentValue = min(max(rawValue, 0), 100)
-                
+
                 let arcCenter = CGPoint(x: geo.size.width / 2, y: geo.size.height)
                 let arcRadius = geo.size.width / 2
                 let angle = Angle.degrees((currentValue / 100 * 22) * 180 - 180)
-                
+
                 let circleX = arcCenter.x + arcRadius * cos(angle.radians)
                 let circleY = arcCenter.y + arcRadius * sin(angle.radians)
 
@@ -27,9 +32,9 @@ struct Scene3View: View {
 
                 ZStack {
                     Image("spaceBackground")
-                    
+
                     YearPickerView(value: $value, dragOffset: $dragOffset)
-                    
+
                     Path { path in
                         path.addArc(
                             center: arcCenter,
@@ -39,31 +44,29 @@ struct Scene3View: View {
                             clockwise: true
                         )
                     }.stroke(Color.gray, lineWidth: 2)
-                    
+
                     Image("earth")
                         .resizable()
                         .frame(width: 150, height: 150)
                         .foregroundColor(.cyan)
                         .position(x: circleX, y: circleY)
-                    
+
                     ZStack {
                         Image("sunWithSpot1")
                         Image("sunWithSpot2").opacity(opacity2)
                         Image("sunWithSpot3").opacity(opacity3)
                     }
                     .position(x: geo.size.width / 2 + 30, y: geo.size.height)
-                    
+
                     Image("sunWithSpot4").opacity(opacity4)
                         .position(x: geo.size.width / 2 + 16, y: geo.size.height)
-                    
-                    HStack(spacing: -25) {
-                        Image("family").resizable()
-                            .scaledToFit()
-                            .foregroundStyle(Color.white)
-                            .frame(width: 500)
-                    }
-                    .position(x: geo.size.width / 2, y: geo.size.height - 400)
-                    
+
+                    Image("family").resizable()
+                        .scaledToFit()
+                        .foregroundStyle(Color.white)
+                        .frame(width: 500)
+                        .position(x: geo.size.width / 2, y: geo.size.height - 400)
+
                     if currentValue >= 100 {
                         NextButton(destination: Scene4View(path: $path))
                             .position(x: geo.size.width - 60, y: geo.size.height / 2)
@@ -79,14 +82,27 @@ struct Scene3View: View {
                             var newValue = self.value + Double(self.dragOffset / geo.size.width * 100)
                             newValue = min(max(newValue, 0), 100)
                             self.value = newValue
-                            
+
                             self.dragOffset = 0
                         }
                 )
             }
+
+            VStack {
+                Spacer()
+
+                SubtitleView(
+                    sentences: narration,
+                    typingSpeeds: [0.07, 0.07],
+                    holdDurations: [0.7]
+                )
+                .padding(.horizontal, 40)
+                .padding(.bottom, 43)
+            }
         }
         .background(Color.black.opacity(0.9))
         .ignoresSafeArea()
+        .autoNarration(.scene3)
     }
 }
 

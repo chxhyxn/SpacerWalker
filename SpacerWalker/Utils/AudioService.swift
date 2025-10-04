@@ -5,18 +5,18 @@ import AVFoundation
 @Observable
 final class AudioService: NSObject {
     static let shared = AudioService()
-    
+
     private var narrationPlayer: AVAudioPlayer?
     private var bgmPlayer: AVAudioPlayer?
     private var sfxPlayers: [String: AVAudioPlayer] = [:]
-    
+
     private(set) var currentNarration: Narration?
-    
-    private override init() {
+
+    override private init() {
         super.init()
         configureAudioSession()
     }
-    
+
     private func configureAudioSession() {
         try? AVAudioSession.sharedInstance().setCategory(.playback, options: [.mixWithOthers])
         try? AVAudioSession.sharedInstance().setActive(true)
@@ -59,8 +59,8 @@ extension AudioService {
 
 extension AudioService: AVAudioPlayerDelegate {
     func audioPlayerDidFinishPlaying(
-        _ player: AVAudioPlayer,
-        successfully flag: Bool
+        _: AVAudioPlayer,
+        successfully _: Bool
     ) {
         stopNarration()
     }

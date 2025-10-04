@@ -161,10 +161,6 @@ struct Scene6View: View {
                             phase = 5
                         }
                         AudioService.shared.playNarration(.scene12)
-                        Task {
-                            try? await Task.sleep(for: .seconds(5))
-                            phase = 6
-                        }
                     } label: {
                         ZStack {
                             Circle()
@@ -186,7 +182,10 @@ struct Scene6View: View {
                     SubtitleView(
                         sentences: narration1,
                         typingSpeeds: [0.07, 0.07, 0.07],
-                        holdDurations: [0.7, 0.7]
+                        holdDurations: [0.7, 0.7],
+                        onComplete: {
+                            phase = 2
+                        }
                     )
                     .padding(.horizontal, 40)
                     .padding(.bottom, 43)
@@ -196,7 +195,10 @@ struct Scene6View: View {
                     SubtitleView(
                         sentences: narration2,
                         typingSpeeds: [0.07, 0.07],
-                        holdDurations: [0.7]
+                        holdDurations: [0.7],
+                        onComplete: {
+                            phase = 6
+                        }
                     )
                     .padding(.horizontal, 40)
                     .padding(.bottom, 43)
@@ -205,8 +207,6 @@ struct Scene6View: View {
         }
         .task {
             AudioService.shared.playNarration(.scene10)
-            try? await Task.sleep(for: .seconds(5))
-            phase = 2
         }
         .onReceive(soundDetectTimer) { _ in
             if hasTriggeredWind { return }

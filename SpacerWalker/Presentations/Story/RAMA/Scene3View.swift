@@ -9,7 +9,8 @@ struct Scene3View: View {
     ]
 
     @Binding var path: [Route]
-
+    
+    @State private var isNarrationEnded = false
     @State private var value: Double = 0
     @State private var dragOffset: CGFloat = 0
 
@@ -21,7 +22,7 @@ struct Scene3View: View {
 
                 let arcCenter = CGPoint(x: geo.size.width / 2, y: geo.size.height)
                 let arcRadius = geo.size.width / 2
-                let angle = Angle.degrees((currentValue / 100 * 22) * 180 - 180)
+                let angle = Angle.degrees((currentValue / 100 * 22) * 180 - 135)
 
                 let circleX = arcCenter.x + arcRadius * cos(angle.radians)
                 let circleY = arcCenter.y + arcRadius * sin(angle.radians)
@@ -29,30 +30,12 @@ struct Scene3View: View {
                 let opacity2 = min(max((currentValue - 25) / 33, 0), 1)
                 let opacity3 = min(max((currentValue - 50) / 33, 0), 1)
                 let opacity4 = min(max((currentValue - 75) / 33, 0), 1)
-
+                
                 ZStack {
                     Image("spaceBackground")
                         .resizable()
                         .scaledToFill()
-
-                    YearPickerView(value: $value, dragOffset: $dragOffset)
-
-                    Path { path in
-                        path.addArc(
-                            center: arcCenter,
-                            radius: arcRadius,
-                            startAngle: .degrees(0),
-                            endAngle: .degrees(180),
-                            clockwise: true
-                        )
-                    }.stroke(Color.gray, lineWidth: 2)
-
-                    Image("earth")
-                        .resizable()
-                        .frame(width: 150, height: 150)
-                        .foregroundColor(.cyan)
-                        .position(x: circleX, y: circleY)
-
+                    
                     ZStack {
                         Image("sunWithSpot1")
                         Image("sunWithSpot2").opacity(opacity2)
@@ -88,18 +71,32 @@ struct Scene3View: View {
                             self.dragOffset = 0
                         }
                 )
+                
+                if isNarrationEnded {
+                    YearPickerView(value: $value, dragOffset: $dragOffset)
+                    
+                    Image("earth")
+                        .resizable()
+                        .frame(width: 110, height: 110)
+                        .position(x: circleX, y: circleY)
+                }
             }
-
+            
             VStack {
                 Spacer()
-
-                SubtitleView(
-                    sentences: narration,
-                    typingSpeeds: [0.07, 0.07],
-                    holdDurations: [0.7]
-                )
-                .padding(.horizontal, 40)
-                .padding(.bottom, 43)
+                
+                if !isNarrationEnded {
+                    SubtitleView(
+                        sentences: narration,
+                        typingSpeeds: [0.07, 0.07],
+                        holdDurations: [0.7],
+                        onComplete:  {
+                            isNarrationEnded = true
+                        }
+                    )
+                    .padding(.horizontal, 40)
+                    .padding(.bottom, 43)
+                }
             }
         }
         .background(Color.black.opacity(0.9))

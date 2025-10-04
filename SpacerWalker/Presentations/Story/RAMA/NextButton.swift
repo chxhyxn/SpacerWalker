@@ -9,10 +9,10 @@ struct NextButton<Destination: View>: View {
         NavigationLink(destination: destination) {
             ZStack {
                 Circle()
-                    .foregroundColor(.white)
+                    .foregroundColor(.blue)
                     .frame(width: 60, height: 60)
                 Image(systemName: "chevron.right")
-                    .foregroundColor(.black)
+                    .foregroundColor(.white)
                     .font(.system(size: 24, weight: .bold))
             }
         }

@@ -20,31 +20,14 @@ struct Scene14View: View {
                 }
 
             ZStack(alignment: .bottom) {
-                // MARK: Sky
                 sky
-
-                // MARK: Aurora
+                
                 aurora
-
-                // MARK: Earth
-                Circle()
-                    .foregroundColor(.blue)
-                    .position(
-                        x: screenSize.width / 2 * 1.5,
-                        y: screenSize.height * 1.2
-                    )
-
-                // MARK: People
-                HStack {
-                    Spacer()
-
-                    Rectangle()
-                        .foregroundColor(.yellow)
-                        .frame(width: 100, height: 200)
-                        .padding(120)
-                }
-
-                // MARK: Slider
+                
+                earth
+                
+                people
+                
                 slider
             }
         }
@@ -76,6 +59,26 @@ struct Scene14View: View {
                     )
             }
         }
+    }
+    
+    var people: some View {
+        HStack {
+            Spacer()
+
+            Rectangle()
+                .foregroundColor(.yellow)
+                .frame(width: 100, height: 200)
+                .padding(120)
+        }
+    }
+    
+    var earth: some View {
+        Circle()
+            .foregroundColor(.blue)
+            .position(
+                x: screenSize.width / 2 * 1.5,
+                y: screenSize.height * 1.2
+            )
     }
 
     var slider: some View {

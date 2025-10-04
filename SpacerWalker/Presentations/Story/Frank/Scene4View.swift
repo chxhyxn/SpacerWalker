@@ -28,8 +28,8 @@ struct Scene4View: View {
     @State private var tiltTask: Task<Void, Never>? = nil
     @State private var physicsTask: Task<Void, Never>? = nil
 
-    private let screenWidth: CGFloat = 1210
-    private let screenHeight: CGFloat = 835
+    //    private let screenWidth: CGFloat = 1210
+    //    private let screenHeight: CGFloat = 835
 
     @State private var cameraState: CameraState = .left
     private var backgroundX: CGFloat {
@@ -103,38 +103,64 @@ struct Scene4View: View {
                     )
                     .position(
                         x: computedFlareX,
-                        y: 417
+                        y: screenHeight / 2
                     )
             }
             HStack {
                 Spacer()
                 if phase == 2 {
-                    NextButton(
-                        destination: Scene4View(path: $path)
-                    )
-                    .onTapGesture {
+                    Button {
                         withAnimation {
                             cameraState = .whole
                             phase = 3
                         }
+                    } label: {
+                        ZStack {
+                            Circle()
+                                .fill(.buttonBackground)
+                                .overlay(
+                                    Circle()
+                                        .stroke(
+                                            Color.buttonStroke,
+                                            lineWidth: 1
+                                        )
+                                )
+
+                            Image(systemName: "chevron.right")
+                                .font(.system(size: 40, weight: .bold))
+                                .foregroundStyle(.white)
+                        }
+                        .frame(width: 80, height: 80)
                     }
-                } else if phase == 4 {
-                    NextButton(destination:
-                        Scene5View(path: $path)
-                    )
-                    .onTapGesture {
+                }
+                if phase == 4 {
+                    Button {
                         withAnimation {
                             flareX = screenWidth - flareWidth / 2
                             cameraState = .right
                             phase = 5
                         }
                         AudioService.shared.playNarration(.scene6)
-                        Task {
-                            try? await Task.sleep(for: .seconds(5))
-                            phase = 6
+                    } label: {
+                        ZStack {
+                            Circle()
+                                .fill(.buttonBackground)
+                                .overlay(
+                                    Circle()
+                                        .stroke(
+                                            Color.buttonStroke,
+                                            lineWidth: 1
+                                        )
+                                )
+
+                            Image(systemName: "chevron.right")
+                                .font(.system(size: 40, weight: .bold))
+                                .foregroundStyle(.white)
                         }
+                        .frame(width: 80, height: 80)
                     }
-                } else if phase == 6 {
+                }
+                if phase == 6 {
                     NextButton(destination: Scene5View(path: $path))
                 }
             }
@@ -145,17 +171,22 @@ struct Scene4View: View {
                     SubtitleView(
                         sentences: narration1,
                         typingSpeeds: [0.07, 0.07],
-                        holdDurations: [0.7]
+                        holdDurations: [0.7],
+                        onComplete: {
+                            phase = 2
+                        }
                     )
                     .padding(.horizontal, 40)
                     .padding(.bottom, 43)
                 }
-
                 if phase == 5 || phase == 6 {
                     SubtitleView(
                         sentences: narration2,
                         typingSpeeds: [0.07, 0.08, 0.07],
-                        holdDurations: [1.4, 1.0]
+                        holdDurations: [1.4, 1.0],
+                        onComplete: {
+                            phase = 6
+                        }
                     )
                     .padding(.horizontal, 40)
                     .padding(.bottom, 43)
@@ -175,9 +206,6 @@ struct Scene4View: View {
             physicsTask = Task { await runPhysicsLoop() }
 
             AudioService.shared.playNarration(.scene4)
-
-            try? await Task.sleep(for: .seconds(5))
-            phase = 2
         }
         .ignoresSafeArea(.all)
         .navigationBarBackButtonHidden()
@@ -225,6 +253,7 @@ struct Scene4View: View {
                 px = flareWidth / 2
             }
             if px > xMargin {
+                print("?")
                 px = xMargin
                 phase = 4
             }

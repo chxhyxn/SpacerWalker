@@ -24,8 +24,8 @@ struct Scene5View: View {
     @State private var shakeTask: Task<Void, Never>? = nil
     @State private var physicsTask: Task<Void, Never>? = nil
 
-    private let screenWidth: CGFloat = 1210
-    private let screenHeight: CGFloat = 835
+    //    private let screenWidth: CGFloat = 1210
+    //    private let screenHeight: CGFloat = 835
 
     @State private var cameraState: CameraState = .left
     private var backgroundX: CGFloat {
@@ -56,7 +56,7 @@ struct Scene5View: View {
         }
     }
 
-    @State var radiY: CGFloat = 417
+    @State var radiY: CGFloat = 0
 
     @State var radiDeltaY: CGFloat = 25
 
@@ -147,14 +147,23 @@ struct Scene5View: View {
                     } label: {
                         ZStack {
                             Circle()
-                                .foregroundColor(.blue)
-                                .frame(width: 60, height: 60)
+                                .fill(.buttonBackground)
+                                .overlay(
+                                    Circle()
+                                        .stroke(
+                                            Color.buttonStroke,
+                                            lineWidth: 1
+                                        )
+                                )
+
                             Image(systemName: "chevron.right")
-                                .foregroundColor(.white)
-                                .font(.system(size: 24, weight: .bold))
+                                .font(.system(size: 40, weight: .bold))
+                                .foregroundStyle(.white)
                         }
+                        .frame(width: 80, height: 80)
                     }
-                } else if phase == 4 {
+                }
+                if phase == 4 {
                     Button {
                         withAnimation {
                             radiX = screenWidth - radiWidth / 2
@@ -162,21 +171,26 @@ struct Scene5View: View {
                             phase = 5
                         }
                         AudioService.shared.playNarration(.scene9)
-                        Task {
-                            try? await Task.sleep(for: .seconds(5))
-                            phase = 6
-                        }
                     } label: {
                         ZStack {
                             Circle()
-                                .foregroundColor(.blue)
-                                .frame(width: 60, height: 60)
+                                .fill(.buttonBackground)
+                                .overlay(
+                                    Circle()
+                                        .stroke(
+                                            Color.buttonStroke,
+                                            lineWidth: 1
+                                        )
+                                )
+
                             Image(systemName: "chevron.right")
-                                .foregroundColor(.white)
-                                .font(.system(size: 24, weight: .bold))
+                                .font(.system(size: 40, weight: .bold))
+                                .foregroundStyle(.white)
                         }
+                        .frame(width: 80, height: 80)
                     }
-                } else if phase == 6 {
+                }
+                if phase == 6 {
                     NextButton(destination: Scene6View(path: $path))
                 }
             }
@@ -186,7 +200,10 @@ struct Scene5View: View {
                     SubtitleView(
                         sentences: narration1,
                         typingSpeeds: [0.07, 0.07],
-                        holdDurations: [0.7]
+                        holdDurations: [0.7],
+                        onComplete: {
+                            phase = 2
+                        }
                     )
                     .padding(.horizontal, 40)
                     .padding(.bottom, 43)
@@ -196,7 +213,10 @@ struct Scene5View: View {
                     SubtitleView(
                         sentences: narration2,
                         typingSpeeds: [0.07, 0.07, 0.07],
-                        holdDurations: [0.7, 0.7]
+                        holdDurations: [0.7, 0.7],
+                        onComplete: {
+                            phase = 6
+                        }
                     )
                     .padding(.horizontal, 40)
                     .padding(.bottom, 43)
@@ -205,6 +225,7 @@ struct Scene5View: View {
         }
         // motionManager
         .task {
+            radiY = screenHeight / 2
             motionManager.start()
             shakeTask = Task {
                 for await _ in motionManager.shakeDegreesStream {
@@ -213,9 +234,6 @@ struct Scene5View: View {
             }
 
             AudioService.shared.playNarration(.scene7)
-
-            try? await Task.sleep(for: .seconds(5))
-            phase = 2
         }
         .ignoresSafeArea(.all)
         .navigationBarBackButtonHidden()

@@ -4,7 +4,7 @@ import SwiftUI
 
 struct RootView: View {
     @State private var path: [Route] = []
-    
+
     var body: some View {
         NavigationStack(path: $path) {
             IntroView()

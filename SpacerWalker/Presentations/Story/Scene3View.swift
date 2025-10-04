@@ -4,7 +4,7 @@ import SwiftUI
 
 struct Scene3View: View {
     @Binding var path: [Route]
-    
+
     var body: some View {
         NavigationLink(destination: Scene4View(path: $path)) {
             Text("다음")

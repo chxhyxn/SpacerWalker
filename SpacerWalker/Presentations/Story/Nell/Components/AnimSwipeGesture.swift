@@ -41,7 +41,7 @@ struct AnimSwipeGestureView: View {
                 .offset(x: offsetX)
         }
         .onAppear {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                 withAnimation(.easeOut(duration: 0.8)) {
                     offsetX = -lineWidth
                 }

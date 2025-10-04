@@ -7,7 +7,9 @@ struct Scene5View: View {
     @Binding var path: [Route]
 
     private let motionManager = MotionManager()
-    
+
+    @State private var phase: Int = 1
+
     @State private var shakeTask: Task<Void, Never>? = nil
     @State private var physicsTask: Task<Void, Never>? = nil
 
@@ -46,7 +48,7 @@ struct Scene5View: View {
     @State var radiY: CGFloat = 417
 
     @State var radiDeltaY: CGFloat = 25
-    
+
     var body: some View {
         ZStack {
             // Background Layer
@@ -111,33 +113,49 @@ struct Scene5View: View {
                     )
             }
 
-            VStack {
-                Button {
-                    withAnimation {
-                        cameraState = .whole
+            HStack {
+                Spacer()
+                if phase == 2 {
+                    Button {
+                        withAnimation {
+                            cameraState = .whole
+                            phase = 3
+                        }
+                    } label: {
+                        ZStack {
+                            Circle()
+                                .foregroundColor(.blue)
+                                .frame(width: 60, height: 60)
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(.white)
+                                .font(.system(size: 24, weight: .bold))
+                        }
                     }
-                } label: {
-                    Text("whole")
-                }
-
-                Button {
-                    withAnimation {
-                        cameraState = .left
+                } else if phase == 4 {
+                    Button {
+                        withAnimation {
+                            radiX = screenWidth - radiWidth / 2
+                            cameraState = .right
+                            phase = 5
+                        }
+                        Task {
+                            try? await Task.sleep(for: .seconds(5))
+                            phase = 6
+                        }
+                    } label: {
+                        ZStack {
+                            Circle()
+                                .foregroundColor(.blue)
+                                .frame(width: 60, height: 60)
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(.white)
+                                .font(.system(size: 24, weight: .bold))
+                        }
                     }
-                } label: {
-                    Text("left")
+                } else if phase == 6 {
+                    NextButton(destination: Scene6View(path: $path))
                 }
-
-                Button {
-                    withAnimation {
-                        cameraState = .right
-                    }
-                } label: {
-                    Text("right")
-                }
-                NextButton(destination: Scene6View(path: $path))
             }
-            .tint(.white)
         }
         // motionManager
         .task {
@@ -147,27 +165,34 @@ struct Scene5View: View {
                     await handleShake()
                 }
             }
+
+            try? await Task.sleep(for: .seconds(5))
+            phase = 2
         }
         .ignoresSafeArea(.all)
         .navigationBarBackButtonHidden()
     }
 
     private func handleShake() async {
-        let xMargin = max(screenWidth * 2 + radiWidth / 2, 0)
+        if phase == 3 {
+            let xMargin = max(screenWidth * 2 - radiWidth / 2, 0)
 
-        withAnimation(.easeOut(duration: 0.1)) {
-            radiX += 100
-            if radiX > xMargin {
-                radiX = xMargin
+            withAnimation(.easeOut(duration: 0.1)) {
+                radiX += 100
+                if radiX > xMargin {
+                    radiX = xMargin
+                }
+                radiY += radiDeltaY
             }
-            radiY += radiDeltaY
-        }
-        if radiDeltaY == 25 {
-            radiDeltaY = 50
-        }
-        radiDeltaY *= -1
-        if radiX == xMargin {
-            print("radi벽에 닿음")
+            if radiDeltaY == 25 {
+                radiDeltaY = 50
+            }
+            radiDeltaY *= -1
+            if radiX == xMargin {
+                withAnimation {
+                    phase = 4
+                }
+            }
         }
         try? await Task.sleep(for: .seconds(0.1))
     }

@@ -8,6 +8,8 @@ struct Scene6View: View {
 
     let soundManager: SoundManager = SoundManager()
 
+    @State private var phase: Int = 1
+
     private let screenWidth: CGFloat = 1210
     private let screenHeight: CGFloat = 835
 
@@ -109,36 +111,54 @@ struct Scene6View: View {
                     )
             }
 
-            VStack {
-                Button {
-                    withAnimation {
-                        cameraState = .whole
+            HStack {
+                Spacer()
+                if phase == 2 {
+                    Button {
+                        withAnimation {
+                            cameraState = .whole
+                            phase = 3
+                        }
+                    } label: {
+                        ZStack {
+                            Circle()
+                                .foregroundColor(.blue)
+                                .frame(width: 60, height: 60)
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(.white)
+                                .font(.system(size: 24, weight: .bold))
+                        }
                     }
-                } label: {
-                    Text("whole")
-                }
-
-                Button {
-                    withAnimation {
-                        cameraState = .left
+                } else if phase == 4 {
+                    Button {
+                        withAnimation {
+                            cmeX = screenWidth - cmeWidth / 2
+                            cameraState = .right
+                            phase = 5
+                        }
+                        Task {
+                            try? await Task.sleep(for: .seconds(5))
+                            phase = 6
+                        }
+                    } label: {
+                        ZStack {
+                            Circle()
+                                .foregroundColor(.blue)
+                                .frame(width: 60, height: 60)
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(.white)
+                                .font(.system(size: 24, weight: .bold))
+                        }
                     }
-                } label: {
-                    Text("left")
+                } else if phase == 6 {
+                    NextButton(destination: Scene13View(path: $path))
                 }
-
-                Button {
-                    withAnimation {
-                        cameraState = .right
-                    }
-                } label: {
-                    Text("right")
-                }
-                NextButton(destination: Scene7View(path: $path))
             }
-            .tint(.white)
         }
         .task {
             soundManager.startMonitoring()
+            try? await Task.sleep(for: .seconds(5))
+            phase = 2
         }
         .onReceive(soundDetectTimer) { _ in
             if hasTriggeredWind { return }
@@ -152,10 +172,13 @@ struct Scene6View: View {
     }
 
     private func handleWindDetect() {
-        let xMargin = max(screenWidth * 2 + cmeWidth / 2, 0)
+        let xMargin = max(screenWidth * 2 - cmeWidth / 2, 0)
 
         withAnimation(.timingCurve(0.5, 0.0, 1.0, 1.0, duration: 2.5)) {
             cmeX = xMargin
+        }
+        withAnimation {
+            phase = 4
         }
     }
 

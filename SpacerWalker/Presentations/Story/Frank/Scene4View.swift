@@ -8,6 +8,9 @@ struct Scene4View: View {
 
     private let motionManager = MotionManager()
 
+    @State private var phase: Int = 1
+    @State private var showPhase1Button: Bool = false
+
     @State private var flareVelocity: CGVector = .zero
     @State private var flareTiltAccel: CGVector = .zero
 
@@ -45,7 +48,7 @@ struct Scene4View: View {
             return flareX
         }
     }
-    
+
     var body: some View {
         ZStack {
             // Background Layer
@@ -109,34 +112,49 @@ struct Scene4View: View {
                         y: 417
                     )
             }
-
-            VStack {
-                Button {
-                    withAnimation {
-                        cameraState = .whole
+            HStack {
+                Spacer()
+                if phase == 2 {
+                    Button {
+                        withAnimation {
+                            cameraState = .whole
+                            phase = 3
+                        }
+                    } label: {
+                        ZStack {
+                            Circle()
+                                .foregroundColor(.blue)
+                                .frame(width: 60, height: 60)
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(.white)
+                                .font(.system(size: 24, weight: .bold))
+                        }
                     }
-                } label: {
-                    Text("whole")
-                }
-
-                Button {
-                    withAnimation {
-                        cameraState = .left
+                } else if phase == 4 {
+                    Button {
+                        withAnimation {
+                            flareX = screenWidth - flareWidth / 2
+                            cameraState = .right
+                            phase = 5
+                        }
+                        Task {
+                            try? await Task.sleep(for: .seconds(5))
+                            phase = 6
+                        }
+                    } label: {
+                        ZStack {
+                            Circle()
+                                .foregroundColor(.blue)
+                                .frame(width: 60, height: 60)
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(.white)
+                                .font(.system(size: 24, weight: .bold))
+                        }
                     }
-                } label: {
-                    Text("left")
+                } else if phase == 6 {
+                    NextButton(destination: Scene5View(path: $path))
                 }
-
-                Button {
-                    withAnimation {
-                        cameraState = .right
-                    }
-                } label: {
-                    Text("right")
-                }
-                NextButton(destination: Scene5View(path: $path))
             }
-            .tint(.white)
         }
         // motionManager
         .task {
@@ -149,6 +167,9 @@ struct Scene4View: View {
             }
 
             physicsTask = Task { await runPhysicsLoop() }
+
+            try? await Task.sleep(for: .seconds(5))
+            phase = 2
         }
         .ignoresSafeArea(.all)
         .navigationBarBackButtonHidden()
@@ -178,26 +199,28 @@ struct Scene4View: View {
     }
 
     private func flarePhysicsStep(dt: Double) {
-        let xMargin = max(screenWidth * 2 + flareWidth / 2, 0)
+        let xMargin = max(screenWidth * 2 - flareWidth / 2, 0)
 
         let accelPerG: CGFloat = 16000
         let dampingPerSecond: Double = 3.0
 
         let ay = flareTiltAccel.dy * accelPerG
-        if ay > 0 {
+        if ay > 0 && phase == 3 {
             flareVelocity.dy += ay * CGFloat(dt)
-            
+
             let damping = CGFloat(exp(-dampingPerSecond * dt))
             flareVelocity.dy *= damping
-            
+
             var px = flareX + flareVelocity.dy * CGFloat(dt)
-            
+
             if px < flareWidth / 2 {
                 px = flareWidth / 2
-            } else if px > xMargin {
-                px = xMargin
             }
-            
+            if px > xMargin {
+                px = xMargin
+                phase = 4
+            }
+
             flareX = px
         }
     }

@@ -81,7 +81,7 @@ struct Scene3View: View {
                         .frame(width: 110, height: 110)
                         .position(x: circleX, y: circleY)
                 }
-                
+
                 if showGuide {
                     InteractionGuideView()
                         .transition(.opacity)

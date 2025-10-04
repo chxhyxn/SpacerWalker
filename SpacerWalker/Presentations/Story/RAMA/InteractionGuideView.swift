@@ -6,14 +6,14 @@ struct InteractionGuideView: View {
     var body: some View {
         ZStack(alignment: .bottomLeading) {
             Color.black.opacity(0.7)
-            
+
             VStack(alignment: .leading, spacing: 0) {
                 Spacer()
-                
+
                 Image(systemName: "hand.draw")
                     .font(.system(size: 71))
                     .foregroundColor(.white)
-                
+
                 Text("Drag the Earth to fast-forward 11 years.")
                     .font(.oneMobile38)
                     .foregroundColor(.white)

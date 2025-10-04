@@ -11,36 +11,12 @@ struct Scene13View: View {
             // MARK: Background
             backgroundVideo
 
-            // MARK: Characters
-            characters
-
             // MARK: Next button
             nextButton
         }
         .ignoresSafeArea()
         .navigationBarBackButtonHidden()
         .autoNarration(.scene13)
-    }
-
-    var characters: some View {
-        let startIndex = 0
-        return VStack {
-            Spacer()
-            HStack(alignment: .bottom) {
-                Rectangle()
-                    .frame(width: 100, height: 150)
-                    .foregroundColor(.orange)
-                    .animFadeIn(order: startIndex + 1)
-                Rectangle()
-                    .frame(width: 100, height: 300)
-                    .foregroundColor(.yellow)
-                    .animFadeIn(order: startIndex + 2)
-                Rectangle()
-                    .frame(width: 100, height: 200)
-                    .foregroundColor(.pink)
-                    .animFadeIn(order: startIndex + 3)
-            }
-        }
     }
 
     var backgroundVideo: some View {

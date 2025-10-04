@@ -21,8 +21,8 @@ struct Scene6View: View {
 
     @State private var phase: Int = 1
 
-    private let screenWidth: CGFloat = 1210
-    private let screenHeight: CGFloat = 835
+    //    private let screenWidth: CGFloat = 1210
+    //    private let screenHeight: CGFloat = 835
 
     @State private var cameraState: CameraState = .left
     private var backgroundX: CGFloat {
@@ -107,31 +107,34 @@ struct Scene6View: View {
                 .rotationEffect(.degrees(cmeAngle), anchor: .bottomTrailing)
                 .position(
                     x: computedCmeX,
-                    y: 417
+                    y: screenHeight / 2
                 )
 
                 // Fart stamps overlayed above CME
                 ForEach(fartStamps) { stamp in
-                    Image("fart")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(
-                            width: stamp.width * 0.35,
-                            height: stamp.width * 0.35
-                        )
-                        .padding(.bottom, 90)
-                        .rotationEffect(
-                            .degrees(stamp.angle),
-                            anchor: .bottomTrailing
-                        )
-                        .position(x: stamp.x, y: stamp.y)
-                        .offset(x: -stamp.width * 0.22, y: -stamp.width * 0.05)
-                        .opacity(stamp.fadeOut ? 0 : 1)
-                        .scaleEffect(stamp.fadeOut ? 1.25 : 1.0)
-                        .animation(
-                            .easeOut(duration: 0.35),
-                            value: stamp.fadeOut
-                        )
+                    VStack {
+                        Image("fart")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(
+                                width: stamp.width * 0.35,
+                                height: stamp.width * 0.35
+                            )
+                        Spacer()
+                            .frame(height: computedCmeWidth / 2)
+                    }
+                    .rotationEffect(
+                        .degrees(stamp.angle),
+                        anchor: .bottomTrailing
+                    )
+                    .position(x: stamp.x, y: stamp.y)
+                    .offset(x: -stamp.width * 0.22, y: -stamp.width * 0.05)
+                    .opacity(stamp.fadeOut ? 0 : 1)
+                    .scaleEffect(stamp.fadeOut ? 1.25 : 1.0)
+                    .animation(
+                        .easeOut(duration: 0.35),
+                        value: stamp.fadeOut
+                    )
                 }
             }
 
@@ -149,7 +152,10 @@ struct Scene6View: View {
                                 .fill(.buttonBackground)
                                 .overlay(
                                     Circle()
-                                        .stroke(Color.buttonStroke, lineWidth: 1)
+                                        .stroke(
+                                            Color.buttonStroke,
+                                            lineWidth: 1
+                                        )
                                 )
 
                             Image(systemName: "chevron.right")
@@ -163,6 +169,7 @@ struct Scene6View: View {
                     Button {
                         withAnimation {
                             cmeX = screenWidth - cmeWidth / 2
+                            cmeAngle = 0
                             cameraState = .right
                             phase = 5
                         }
@@ -173,7 +180,10 @@ struct Scene6View: View {
                                 .fill(.buttonBackground)
                                 .overlay(
                                     Circle()
-                                        .stroke(Color.buttonStroke, lineWidth: 1)
+                                        .stroke(
+                                            Color.buttonStroke,
+                                            lineWidth: 1
+                                        )
                                 )
 
                             Image(systemName: "chevron.right")
@@ -269,8 +279,8 @@ struct Scene6View: View {
         let id = UUID()
         let stamp = FartStamp(
             id: id,
-            x: computedCmeX + 90,
-            y: 400,
+            x: computedCmeX + computedCmeWidth / 2,
+            y: screenHeight / 2,
             angle: cmeAngle + 10,
             width: 300,
             fadeOut: false

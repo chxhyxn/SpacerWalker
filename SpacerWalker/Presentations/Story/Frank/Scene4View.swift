@@ -28,8 +28,8 @@ struct Scene4View: View {
     @State private var tiltTask: Task<Void, Never>? = nil
     @State private var physicsTask: Task<Void, Never>? = nil
 
-    private let screenWidth: CGFloat = 1210
-    private let screenHeight: CGFloat = 835
+    //    private let screenWidth: CGFloat = 1210
+    //    private let screenHeight: CGFloat = 835
 
     @State private var cameraState: CameraState = .left
     private var backgroundX: CGFloat {
@@ -103,7 +103,7 @@ struct Scene4View: View {
                     )
                     .position(
                         x: computedFlareX,
-                        y: 417
+                        y: screenHeight / 2
                     )
             }
             HStack {
@@ -120,7 +120,10 @@ struct Scene4View: View {
                                 .fill(.buttonBackground)
                                 .overlay(
                                     Circle()
-                                        .stroke(Color.buttonStroke, lineWidth: 1)
+                                        .stroke(
+                                            Color.buttonStroke,
+                                            lineWidth: 1
+                                        )
                                 )
 
                             Image(systemName: "chevron.right")
@@ -144,7 +147,10 @@ struct Scene4View: View {
                                 .fill(.buttonBackground)
                                 .overlay(
                                     Circle()
-                                        .stroke(Color.buttonStroke, lineWidth: 1)
+                                        .stroke(
+                                            Color.buttonStroke,
+                                            lineWidth: 1
+                                        )
                                 )
 
                             Image(systemName: "chevron.right")

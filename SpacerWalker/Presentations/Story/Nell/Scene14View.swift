@@ -58,7 +58,7 @@ struct Scene14View: View {
                 Rectangle()
                     .frame(
                         width: dragOffset + initDragOffset,
-                        height: .infinity
+                        height: screenSize.height
                     )
             }
         }

@@ -18,7 +18,6 @@ final class AudioService: NSObject {
     }
     
     private func configureAudioSession() {
-        let session = AVAudioSession.sharedInstance()
         try? AVAudioSession.sharedInstance().setCategory(.playback, options: [.mixWithOthers])
         try? AVAudioSession.sharedInstance().setActive(true)
     }
@@ -63,7 +62,6 @@ extension AudioService: AVAudioPlayerDelegate {
         _ player: AVAudioPlayer,
         successfully flag: Bool
     ) {
-        guard let narrationPlayer else { return }
         stopNarration()
     }
 }

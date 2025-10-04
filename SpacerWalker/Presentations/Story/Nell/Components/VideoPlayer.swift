@@ -23,33 +23,54 @@ struct VideoPlayerView: UIViewControllerRepresentable {
 struct VideoPlayer: View {
     @State private var player: AVPlayer
     @State private var endObserver: NSObjectProtocol?
+    private let videoSize: CGSize
+    private var ratio: CGFloat {
+        videoSize.width / videoSize.height
+    }
 
     init(path: String) {
         let url = Bundle.main.url(forResource: path, withExtension: "mp4")!
+        let asset = AVAsset(url: url)
+        let track = asset.tracks(withMediaType: .video).first!
+        videoSize = track.naturalSize.applying(track.preferredTransform)
         let player = AVPlayer(url: url)
         player.actionAtItemEnd = .none
         _player = State(initialValue: player)
     }
 
     var body: some View {
-        VideoPlayerView(player: player)
-            .onAppear {
-                player.play()
-
-                endObserver = NotificationCenter.default.addObserver(
-                    forName: .AVPlayerItemDidPlayToEndTime,
-                    object: player.currentItem,
-                    queue: .main
-                ) { _ in
-                    player.seek(to: .zero)
+        GeometryReader { geo in
+            let width = geo.size.width
+            let height = geo.size.height
+            VideoPlayerView(player: player)
+                .ignoresSafeArea()
+                .aspectRatio(contentMode: .fill)
+                .frame(
+                    width: height * ratio,
+                    height: height
+                )
+                .position(
+                    x: width / 2,
+                    y: height / 2
+                )
+                .onAppear {
                     player.play()
+                    
+                    endObserver = NotificationCenter.default.addObserver(
+                        forName: .AVPlayerItemDidPlayToEndTime,
+                        object: player.currentItem,
+                        queue: .main
+                    ) { _ in
+                        player.seek(to: .zero)
+                        player.play()
+                    }
                 }
-            }
-            .onDisappear {
-                player.pause()
-                if let observer = endObserver {
-                    NotificationCenter.default.removeObserver(observer)
+                .onDisappear {
+                    player.pause()
+                    if let observer = endObserver {
+                        NotificationCenter.default.removeObserver(observer)
+                    }
                 }
-            }
+        }
     }
 }

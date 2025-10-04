@@ -30,7 +30,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		B95A39652E91096200EBEB1A /* Exceptions for "SpacerWalker" folder in "SpacerWalker" target */ = {
+		2173AA472E91375200276C0E /* Exceptions for "SpacerWalker" folder in "SpacerWalker" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -43,7 +43,7 @@
 		B9BEE4002E9092B300507C00 /* SpacerWalker */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				B95A39652E91096200EBEB1A /* Exceptions for "SpacerWalker" folder in "SpacerWalker" target */,
+				2173AA472E91375200276C0E /* Exceptions for "SpacerWalker" folder in "SpacerWalker" target */,
 			);
 			path = SpacerWalker;
 			sourceTree = "<group>";
@@ -414,7 +414,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpacerWalker/Info.plist;
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "";
+				INFOPLIST_KEY_LSApplicationCategoryType = OneMobilePop.ttf;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -454,7 +454,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpacerWalker/Info.plist;
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "";
+				INFOPLIST_KEY_LSApplicationCategoryType = OneMobilePop.ttf;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

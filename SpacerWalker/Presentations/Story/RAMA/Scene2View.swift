@@ -26,7 +26,7 @@ struct Scene2View: View {
                     .frame(width: 500)
                     .position(x: geo.size.width / 2, y: geo.size.height - 400)
 
-                NextButton(destination: Scene4View(path: $path))
+                NextButton(destination: Scene3View(path: $path))
                     .position(x: geo.size.width - 60, y: geo.size.height / 2)
             }
 

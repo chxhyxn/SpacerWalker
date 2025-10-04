@@ -21,6 +21,7 @@ struct VideoPlayerView: UIViewControllerRepresentable {
 }
 
 struct VideoPlayer: View {
+    @Binding var isPlaying: Bool
     @State private var player: AVPlayer
     @State private var endObserver: NSObjectProtocol?
     private let videoSize: CGSize
@@ -28,7 +29,7 @@ struct VideoPlayer: View {
         videoSize.width / videoSize.height
     }
 
-    init(path: String) {
+    init(path: String, isPlaying: Binding<Bool> = Binding.constant(true)) {
         let url = Bundle.main.url(forResource: path, withExtension: "mp4")!
         let asset = AVAsset(url: url)
         let track = asset.tracks(withMediaType: .video).first!
@@ -36,6 +37,7 @@ struct VideoPlayer: View {
         let player = AVPlayer(url: url)
         player.actionAtItemEnd = .none
         _player = State(initialValue: player)
+        _isPlaying = isPlaying
     }
 
     var body: some View {
@@ -54,7 +56,9 @@ struct VideoPlayer: View {
                     y: height / 2
                 )
                 .onAppear {
-                    player.play()
+                    if isPlaying {
+                        player.play()
+                    }
                     
                     endObserver = NotificationCenter.default.addObserver(
                         forName: .AVPlayerItemDidPlayToEndTime,
@@ -63,6 +67,13 @@ struct VideoPlayer: View {
                     ) { _ in
                         player.seek(to: .zero)
                         player.play()
+                    }
+                }
+                .onChange(of : isPlaying) { _, playing in
+                    if playing {
+                        player.play()
+                    } else {
+                        player.pause()
                     }
                 }
                 .onDisappear {

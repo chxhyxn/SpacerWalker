@@ -35,7 +35,7 @@ struct Scene14View: View {
 
                 friends
 
-                earth
+                // earth
 
                 people
 
@@ -125,10 +125,8 @@ struct Scene14View: View {
         HStack {
             Spacer()
 
-            Rectangle()
+            Image("People")
                 .foregroundColor(.yellow)
-                .frame(width: 100, height: 200)
-                .padding(120)
         }
         .animSlide(offsetY: 350, order: 3)
     }
@@ -172,9 +170,7 @@ struct Scene14View: View {
                         withAnimation {
                             progress = dragOffset / screenSize.width
                             isNextButton = progress >= 1
-                            if showDragGuide {
-                                showDragGuide = progress == 0
-                            }
+                            showDragGuide = progress == 0
                         }
                     }
                     .onEnded { _ in

@@ -70,7 +70,7 @@ struct Scene1View: View {
     private func runAnimationSequence() async {
         try? await Task.sleep(for: .seconds(0.5))
         
-        withAnimation(.interpolatingSpring(stiffness: 180, damping: 18).speed(0.15)) {
+        withAnimation(.interpolatingSpring(stiffness: 180, damping: 20).speed(0.15)) {
             rocketOffsetY = 0
             hermesOffsetY = 0
             rocketScale = 1.0

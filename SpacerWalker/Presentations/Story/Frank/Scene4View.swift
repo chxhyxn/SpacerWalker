@@ -189,9 +189,6 @@ struct Scene4View: View {
             physicsTask = Task { await runPhysicsLoop() }
 
             AudioService.shared.playNarration(.scene4)
-
-            try? await Task.sleep(for: .seconds(5))
-            phase = 2
         }
         .ignoresSafeArea(.all)
         .navigationBarBackButtonHidden()

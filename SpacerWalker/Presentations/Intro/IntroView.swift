@@ -81,6 +81,7 @@ struct IntroView: View {
         .autoNarration(.scene0, delay: 1.0)
     }
 }
+
 #Preview {
     IntroView()
 }

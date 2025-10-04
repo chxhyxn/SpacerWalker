@@ -8,7 +8,7 @@ struct Scene1View: View {
     private let narration: [String] = [
         "Hi there! I’m HERMES.",
         "I’m a little fairy who observes space weather.",
-        "Today, I’d like to tell you a fun story about the Sun and its three best friends."
+        "Today, I’d like to tell you a fun story about the Sun and its three best friends.",
     ]
 
     @State private var rocketOffsetY: CGFloat = 1200
@@ -32,11 +32,11 @@ struct Scene1View: View {
                 Image(.rocketonloy)
                     .offset(y: rocketOffsetY)
                     .scaleEffect(rocketScale)
-                
+
                 Image(.hermes)
                     .offset(y: hermesOffsetY)
                     .scaleEffect(hermesScale)
-                
+
                 HStack {
                     Spacer()
                     NextButton(destination: Scene2View(path: $path))
@@ -69,7 +69,7 @@ struct Scene1View: View {
 
     private func runAnimationSequence() async {
         try? await Task.sleep(for: .seconds(0.5))
-        
+
         withAnimation(.interpolatingSpring(stiffness: 180, damping: 20).speed(0.15)) {
             rocketOffsetY = 0
             hermesOffsetY = 0

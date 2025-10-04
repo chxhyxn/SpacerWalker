@@ -6,7 +6,11 @@ struct Scene14View: View {
     @State private var viewModel: Scene14ViewModel = .init()
 
     var body: some View {
-        Text("Hello")
+        Image("Aurora")
+            .resizable()
+            .scaledToFill()
+            .frame(width: .infinity, height: .infinity)
+            .ignoresSafeArea()
     }
 }
 

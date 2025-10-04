@@ -14,7 +14,7 @@ struct NextButton<Destination: View>: View {
                         Circle()
                             .stroke(Color.buttonStroke, lineWidth: 1)
                     )
-                
+
                 Image(systemName: "chevron.right")
                     .font(.system(size: 40, weight: .bold))
                     .foregroundStyle(.white)

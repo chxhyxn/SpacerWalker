@@ -7,6 +7,7 @@ struct Scene14View: View {
     @State private var lastDragOffset: CGFloat = 0
     @State private var progress: Double = 0.0
     @State private var screenSize: CGSize = .zero
+    @State private var friendsXOffset: CGFloat = -200
     private let initDragOffset: CGFloat = 0
     private let dragRatio: CGFloat = 1.25
 
@@ -65,14 +66,22 @@ struct Scene14View: View {
     }
 
     var friends: some View {
-        Image("AuroraFriends")
+        let targetX = screenSize.width - dragOffset - initDragOffset - 80
+        return Image("AuroraFriends")
             .resizable()
             .aspectRatio(contentMode: .fit)
             .frame(width: screenSize.height / 4)
             .position(
-                x: screenSize.width - dragOffset - initDragOffset - 80,
+                x: targetX - friendsXOffset,
                 y: screenSize.height / 3
             )
+            .onAppear {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    withAnimation(.easeOut(duration: 0.25)) {
+                        friendsXOffset = 0
+                    }
+                }
+            }
     }
 
     var people: some View {
@@ -84,6 +93,7 @@ struct Scene14View: View {
                 .frame(width: 100, height: 200)
                 .padding(120)
         }
+        .animSlide(offsetY: 350, order: 3)
     }
 
     var earth: some View {
@@ -93,6 +103,7 @@ struct Scene14View: View {
                 x: screenSize.width / 2 * 1.5,
                 y: screenSize.height * 1.2
             )
+            .animSlide(offsetY: 350, order: 2)
     }
 
     var slider: some View {

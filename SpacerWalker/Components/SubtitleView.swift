@@ -12,7 +12,7 @@ struct SubtitleView: View {
     var typingSpeeds: [Double] = []
     var holdDurations: [Double] = []
     var gapDurations: [Double] = []
-    
+
     var onComplete: (() -> Void)? = nil
 
     @State private var index: Int = 0

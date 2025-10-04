@@ -9,7 +9,7 @@ struct Scene3View: View {
     ]
 
     @Binding var path: [Route]
-    
+
     @State private var isNarrationEnded = false
     @State private var value: Double = 0
     @State private var dragOffset: CGFloat = 0
@@ -30,12 +30,12 @@ struct Scene3View: View {
                 let opacity2 = min(max((currentValue - 25) / 33, 0), 1)
                 let opacity3 = min(max((currentValue - 50) / 33, 0), 1)
                 let opacity4 = min(max((currentValue - 75) / 33, 0), 1)
-                
+
                 ZStack {
                     Image("spaceBackground")
                         .resizable()
                         .scaledToFill()
-                    
+
                     ZStack {
                         Image("sunWithSpot1")
                         Image("sunWithSpot2").opacity(opacity2)
@@ -71,26 +71,26 @@ struct Scene3View: View {
                             self.dragOffset = 0
                         }
                 )
-                
+
                 if isNarrationEnded {
                     YearPickerView(value: $value, dragOffset: $dragOffset)
-                    
+
                     Image("earth")
                         .resizable()
                         .frame(width: 110, height: 110)
                         .position(x: circleX, y: circleY)
                 }
             }
-            
+
             VStack {
                 Spacer()
-                
+
                 if !isNarrationEnded {
                     SubtitleView(
                         sentences: narration,
                         typingSpeeds: [0.07, 0.07],
                         holdDurations: [0.7],
-                        onComplete:  {
+                        onComplete: {
                             isNarrationEnded = true
                         }
                     )

@@ -3,6 +3,23 @@
 import AVKit
 import SwiftUI
 
+struct VideoPlayerView: UIViewControllerRepresentable {
+    let player: AVPlayer
+
+    func makeUIViewController(context: Context) -> AVPlayerViewController {
+        let controller = AVPlayerViewController()
+        controller.player = player
+        controller.showsPlaybackControls = false
+        return controller
+    }
+
+    func updateUIViewController(
+        _ uiViewController: AVPlayerViewController,
+        context: Context
+    ) {
+    }
+}
+
 struct VideoPlayer: View {
     @State private var player: AVPlayer
     @State private var endObserver: NSObjectProtocol?
@@ -15,10 +32,10 @@ struct VideoPlayer: View {
     }
 
     var body: some View {
-        AVKit.VideoPlayer(player: player)
+        VideoPlayerView(player: player)
             .onAppear {
                 player.play()
-                
+
                 endObserver = NotificationCenter.default.addObserver(
                     forName: .AVPlayerItemDidPlayToEndTime,
                     object: player.currentItem,

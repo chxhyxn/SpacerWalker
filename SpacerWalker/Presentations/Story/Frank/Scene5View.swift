@@ -49,6 +49,20 @@ struct Scene5View: View {
 
     @State var radiDeltaY: CGFloat = 25
 
+    // MARK: - Stamp effect
+    private struct Stamp: Identifiable, Equatable {
+        let id = UUID()
+        var x: CGFloat
+        var y: CGFloat
+        var variant: Int
+        var rotation: Angle
+        var scale: CGFloat
+        var opacity: Double
+    }
+
+    @State private var stamps: [Stamp] = []
+    private let maxStamps: Int = 200
+
     var body: some View {
         ZStack {
             // Background Layer
@@ -82,6 +96,21 @@ struct Scene5View: View {
 
             // Character Layer
             ZStack {
+                // Stamps (rendered behind Radi)
+                ForEach(stamps) { stamp in
+                    Image("crumble\(stamp.variant)")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(
+                            width: stamp.scale,
+                            height: stamp.scale
+                        )
+                        .rotationEffect(stamp.rotation)
+                        .position(x: stamp.x, y: stamp.y)
+                        .opacity(stamp.opacity)
+                        .allowsHitTesting(false)
+                }
+
                 // Radi
                 Image("radiRun")
                     .resizable()
@@ -166,6 +195,7 @@ struct Scene5View: View {
                     radiX = xMargin
                 }
                 radiY += radiDeltaY
+                spawnStamps(aroundX: computedRadiX, y: radiY, count: 10)
             }
             if radiDeltaY == 25 {
                 radiDeltaY = 50
@@ -180,6 +210,59 @@ struct Scene5View: View {
         try? await Task.sleep(for: .seconds(0.1))
     }
 
+    // MARK: - Stamp generation
+    private func spawnStamps(aroundX x: CGFloat, y: CGFloat, count: Int) {
+        let baseSize = computedRadiWidth
+        var new: [Stamp] = []
+
+        for _ in 0..<count {
+            let horizontalRange = baseSize * 0.8
+            let verticalMin = baseSize * 0.6
+            let verticalMax = baseSize * 1.8
+
+            let offsetX = CGFloat.random(in: -horizontalRange...horizontalRange)
+            let sign: CGFloat = Bool.random() ? -1 : 1
+            let offsetY = sign * CGFloat.random(in: verticalMin...verticalMax)
+
+            let scale = CGFloat.random(in: 10...20)
+            let rotation = Angle.degrees(Double.random(in: 0...360))
+            let variant = Int.random(in: 1...4)
+
+            let stamp = Stamp(
+                x: x + offsetX,
+                y: y + offsetY,
+                variant: variant,
+                rotation: rotation,
+                scale: scale,
+                opacity: 1.0
+            )
+            new.append(stamp)
+        }
+
+        // Append and cap the total number of stamps
+        stamps.append(contentsOf: new)
+        if stamps.count > maxStamps {
+            stamps.removeFirst(stamps.count - maxStamps)
+        }
+
+        // Schedule fade-out and removal
+        for id in new.map({ $0.id }) {
+            let delay = Double.random(in: 0.3...1.0)
+            Task { @MainActor in
+                try? await Task.sleep(for: .seconds(delay))
+                if let idx = stamps.firstIndex(where: { $0.id == id }) {
+                    withAnimation(.easeOut(duration: 0.25)) {
+                        stamps[idx].opacity = 0
+                    }
+                }
+                try? await Task.sleep(for: .seconds(0.3))
+                if let idx = stamps.firstIndex(where: { $0.id == id }) {
+                    stamps.remove(at: idx)
+                }
+            }
+        }
+    }
+
     enum CameraState {
         case left
         case right
@@ -190,3 +273,4 @@ struct Scene5View: View {
 #Preview {
     Scene5View(path: .constant([.story]))
 }
+

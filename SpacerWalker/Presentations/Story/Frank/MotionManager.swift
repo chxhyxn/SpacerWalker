@@ -24,7 +24,7 @@ final class MotionManager {
     init(
         updateInterval: TimeInterval = 1.0 / 60.0,
         shakeCooldown: TimeInterval = 0.01,
-        startThreshold: Double = 0.6,
+        startThreshold: Double = 0.4,
         referenceFrame: CMAttitudeReferenceFrame = .xArbitraryZVertical
     ) {
         var cont: AsyncStream<Int>.Continuation!

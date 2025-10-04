@@ -109,23 +109,20 @@ struct Scene4View: View {
             HStack {
                 Spacer()
                 if phase == 2 {
-                    Button {
+                    NextButton(
+                        destination: Scene4View(path: $path)
+                    )
+                    .onTapGesture {
                         withAnimation {
                             cameraState = .whole
                             phase = 3
                         }
-                    } label: {
-                        ZStack {
-                            Circle()
-                                .foregroundColor(.blue)
-                                .frame(width: 60, height: 60)
-                            Image(systemName: "chevron.right")
-                                .foregroundColor(.white)
-                                .font(.system(size: 24, weight: .bold))
-                        }
                     }
                 } else if phase == 4 {
-                    Button {
+                    NextButton(destination:
+                        Scene5View(path: $path)
+                    )
+                    .onTapGesture {
                         withAnimation {
                             flareX = screenWidth - flareWidth / 2
                             cameraState = .right
@@ -135,15 +132,6 @@ struct Scene4View: View {
                         Task {
                             try? await Task.sleep(for: .seconds(5))
                             phase = 6
-                        }
-                    } label: {
-                        ZStack {
-                            Circle()
-                                .foregroundColor(.blue)
-                                .frame(width: 60, height: 60)
-                            Image(systemName: "chevron.right")
-                                .foregroundColor(.white)
-                                .font(.system(size: 24, weight: .bold))
                         }
                     }
                 } else if phase == 6 {

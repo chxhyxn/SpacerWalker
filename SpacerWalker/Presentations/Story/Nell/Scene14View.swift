@@ -168,13 +168,13 @@ struct Scene14View: View {
                         // MARK: Drag start
                         let w = value.translation.width * dragRatio
                         dragOffset = (lastDragOffset - w).clamped(
-                            to: 0...(screenSize.width - initFriendOffset + 100)
+                            to: 0 ... (screenSize.width - initFriendOffset + 100)
                         )
                         withAnimation {
                             progress = dragOffset / screenSize.width
                             isNextButton = progress >= 1
                             showDragGuide = progress == 0
-                            if progress > 0.5 && !isCheerSoundEffectPlaying {
+                            if progress > 0.5, !isCheerSoundEffectPlaying {
                                 self.isCheerSoundEffectPlaying = true
                                 audioService.playSoundEffect("Cheer")
                             } else if progress == 0 {

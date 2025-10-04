@@ -36,7 +36,7 @@ struct Scene3View: View {
                     Image("spaceBackground")
                         .resizable()
                         .scaledToFill()
-                    
+
                     if isNarrationEnded {
                         YearPickerView(value: $value, dragOffset: $dragOffset)
 
@@ -87,7 +87,7 @@ struct Scene3View: View {
                     InteractionGuideView()
                         .transition(.opacity)
                 }
-                
+
                 NextButton(destination: Scene4View(path: $path))
                     .position(x: geo.size.width - 60, y: geo.size.height / 2)
             }

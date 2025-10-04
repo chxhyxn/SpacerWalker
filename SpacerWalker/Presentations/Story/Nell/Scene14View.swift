@@ -8,6 +8,7 @@ struct Scene14View: View {
     @State private var progress: Double = 0.0
     @State private var screenSize: CGSize = .zero
     private let initDragOffset: CGFloat = 0
+    private let dragRatio: CGFloat = 1.25
 
     var body: some View {
         GeometryReader { geo in
@@ -100,7 +101,7 @@ struct Scene14View: View {
             .gesture(
                 DragGesture()
                     .onChanged { value in
-                        let w = value.translation.width
+                        let w = value.translation.width * dragRatio
                         dragOffset = (lastDragOffset - w).clamped(
                             to: 0...(screenSize.width - initDragOffset + 100)
                         )

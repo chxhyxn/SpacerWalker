@@ -39,7 +39,7 @@ struct Scene1View: View {
                 
                 HStack {
                     Spacer()
-                    NextButton(destination: Scene4View(path: $path))
+                    NextButton(destination: Scene2View(path: $path))
                         .padding(.trailing, 40)
                 }
             }

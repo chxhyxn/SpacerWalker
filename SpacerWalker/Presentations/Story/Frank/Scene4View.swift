@@ -129,7 +129,8 @@ struct Scene4View: View {
                         }
                         .frame(width: 80, height: 80)
                     }
-                } else if phase == 4 {
+                }
+                if phase == 4 {
                     Button {
                         withAnimation {
                             flareX = screenWidth - flareWidth / 2
@@ -152,7 +153,8 @@ struct Scene4View: View {
                         }
                         .frame(width: 80, height: 80)
                     }
-                } else if phase == 6 {
+                }
+                if phase == 6 {
                     NextButton(destination: Scene5View(path: $path))
                 }
             }
@@ -171,7 +173,6 @@ struct Scene4View: View {
                     .padding(.horizontal, 40)
                     .padding(.bottom, 43)
                 }
-
                 if phase == 5 || phase == 6 {
                     SubtitleView(
                         sentences: narration2,
@@ -246,6 +247,7 @@ struct Scene4View: View {
                 px = flareWidth / 2
             }
             if px > xMargin {
+                print("?")
                 px = xMargin
                 phase = 4
             }

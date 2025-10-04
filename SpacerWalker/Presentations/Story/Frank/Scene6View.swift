@@ -146,14 +146,20 @@ struct Scene6View: View {
                     } label: {
                         ZStack {
                             Circle()
-                                .foregroundColor(.blue)
-                                .frame(width: 60, height: 60)
+                                .fill(.buttonBackground)
+                                .overlay(
+                                    Circle()
+                                        .stroke(Color.buttonStroke, lineWidth: 1)
+                                )
+
                             Image(systemName: "chevron.right")
-                                .foregroundColor(.white)
-                                .font(.system(size: 24, weight: .bold))
+                                .font(.system(size: 40, weight: .bold))
+                                .foregroundStyle(.white)
                         }
+                        .frame(width: 80, height: 80)
                     }
-                } else if phase == 4 {
+                }
+                if phase == 4 {
                     Button {
                         withAnimation {
                             cmeX = screenWidth - cmeWidth / 2
@@ -164,14 +170,20 @@ struct Scene6View: View {
                     } label: {
                         ZStack {
                             Circle()
-                                .foregroundColor(.blue)
-                                .frame(width: 60, height: 60)
+                                .fill(.buttonBackground)
+                                .overlay(
+                                    Circle()
+                                        .stroke(Color.buttonStroke, lineWidth: 1)
+                                )
+
                             Image(systemName: "chevron.right")
-                                .foregroundColor(.white)
-                                .font(.system(size: 24, weight: .bold))
+                                .font(.system(size: 40, weight: .bold))
+                                .foregroundStyle(.white)
                         }
+                        .frame(width: 80, height: 80)
                     }
-                } else if phase == 6 {
+                }
+                if phase == 6 {
                     NextButton(destination: Scene13View(path: $path))
                 }
             }

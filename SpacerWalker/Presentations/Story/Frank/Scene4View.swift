@@ -253,7 +253,6 @@ struct Scene4View: View {
                 px = flareWidth / 2
             }
             if px > xMargin {
-                print("?")
                 px = xMargin
                 phase = 4
             }

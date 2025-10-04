@@ -7,20 +7,20 @@ struct Scene1View: View {
     let narration: [String] = [
         "Hi there! I’m HERMES.",
         "I’m a little fairy who observes space weather.",
-        "Today, I’d like to tell you a fun story about the Sun and its three best friends."
+        "Today, I’d like to tell you a fun story about the Sun and its three best friends.",
     ]
 
     var body: some View {
         ZStack {
             Color.black.edgesIgnoringSafeArea(.all)
-            
+
             VStack {
                 NavigationLink(destination: Scene2View(path: $path)) {
                     Text("다음")
                         .font(.oneMobile100)
                         .foregroundStyle(.white)
                 }
-                                
+
                 SubtitleView(
                     sentences: narration,
                     typingSpeeds: [0.11, 0.07, 0.06],

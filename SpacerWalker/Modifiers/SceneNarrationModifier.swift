@@ -5,7 +5,7 @@ import SwiftUI
 struct SceneNarrationModifier: ViewModifier {
     let narration: Narration
     var delay: Double = 0
-    
+
     func body(content: Content) -> some View {
         content
             .onAppear {

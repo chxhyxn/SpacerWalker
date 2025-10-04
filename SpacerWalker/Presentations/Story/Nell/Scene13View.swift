@@ -19,6 +19,7 @@ struct Scene13View: View {
         }
         .ignoresSafeArea()
         .navigationBarBackButtonHidden()
+        .autoNarration(.scene13)
     }
 
     var characters: some View {

@@ -9,7 +9,8 @@ struct Scene14View: View {
     @State private var screenSize: CGSize = .zero
     @State private var friendsXOffset: CGFloat = -200
     @State private var isNextButton: Bool = false
-    private let initDragOffset: CGFloat = 0
+    @State private var showDragGuide: Bool = true
+    private let initFriendOffset: CGFloat = -8
     private let dragRatio: CGFloat = 1.25
 
     var body: some View {
@@ -33,6 +34,7 @@ struct Scene14View: View {
             }
         }
         .ignoresSafeArea()
+        .navigationBarBackButtonHidden()
     }
 
     func initScreenSize(_ geo: GeometryProxy) -> some View {
@@ -65,7 +67,7 @@ struct Scene14View: View {
                 Spacer()
                 Rectangle()
                     .frame(
-                        width: dragOffset + initDragOffset,
+                        width: dragOffset + initFriendOffset,
                         height: screenSize.height
                     )
             }
@@ -73,13 +75,27 @@ struct Scene14View: View {
     }
 
     var friends: some View {
-        let targetX = screenSize.width - dragOffset - initDragOffset - 80
-        return Image("AuroraFriends")
+        // MARK: Friends
+        Image("AuroraFriends")
             .resizable()
             .aspectRatio(contentMode: .fit)
             .frame(width: screenSize.height / 4)
+            .background {
+                // MARK: White line
+                Rectangle()
+                    .foregroundColor(.white)
+                    .frame(width: 5, height: screenSize.height*2)
+                    .position(x: 182, y: screenSize.height/2)
+            }
+            .overlay {
+                // MARK: Guide
+                Image("scene15Guide")
+                    .position(x: -150, y: 200)
+                    .animFadeIn(order: 8, visible: $showDragGuide)
+            }
             .position(
-                x: targetX - friendsXOffset,
+                x: screenSize.width - dragOffset - initFriendOffset - 78
+                    - friendsXOffset,
                 y: screenSize.height / 3
             )
             .onAppear {
@@ -132,12 +148,14 @@ struct Scene14View: View {
             .gesture(
                 DragGesture()
                     .onChanged { value in
+                        // MARK: Drag start
                         let w = value.translation.width * dragRatio
                         dragOffset = (lastDragOffset - w).clamped(
-                            to: 0...(screenSize.width - initDragOffset + 100)
+                            to: 0...(screenSize.width - initFriendOffset + 100)
                         )
                         progress = dragOffset / screenSize.width
                         isNextButton = progress >= 1
+                        showDragGuide = progress == 0
                     }
                     .onEnded { _ in
                         lastDragOffset = dragOffset

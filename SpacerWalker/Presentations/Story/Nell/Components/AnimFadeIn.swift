@@ -35,7 +35,7 @@ struct AnimFadeInModifier: ViewModifier {
                         appear = true
                     }
                 } else {
-                    appear = false
+                    appear = true
                 }
             }
             .onChange(of: visible) { _, visible in

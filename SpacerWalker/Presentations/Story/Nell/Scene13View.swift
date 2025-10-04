@@ -47,7 +47,7 @@ struct Scene13View: View {
     }
 
     var nextButton: some View {
-        NextButton(destination: Scene14View())
+        NextButton(destination: Scene14View(path: $path))
             .animFadeIn(order: 10, visible: $isNextButton)
             .padding(16)
     }

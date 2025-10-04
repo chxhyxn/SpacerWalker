@@ -6,8 +6,9 @@ import SwiftUI
 struct SpacerWalkerApp: App {
     var body: some Scene {
         WindowGroup {
-            RootView()
-                .preferredColorScheme(.light)
+            Scene15View(path: .constant([.story]))
+//            RootView()
+//                .preferredColorScheme(.light)
         }
     }
 }

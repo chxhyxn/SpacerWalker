@@ -21,8 +21,8 @@ struct Scene3View: View {
                 let circleX = arcCenter.x + arcRadius * cos(angle.radians)
                 let circleY = arcCenter.y + arcRadius * sin(angle.radians)
                 
-                let minImageSize: CGFloat = 70
-                let maxImageSize: CGFloat = 250
+                let minImageSize: CGFloat = 150
+                let maxImageSize: CGFloat = 300
                 let currentImageSize = minImageSize + (maxImageSize - minImageSize) * (currentValue / 100)
 
                 let opacity2 = min(max((currentValue - 25) / 33, 0), 1)
@@ -30,14 +30,16 @@ struct Scene3View: View {
                 let opacity4 = min(max((currentValue - 75) / 33, 0), 1)
 
                 ZStack {
+                    Image("spaceBackground")
+                    
                     Path { path in
                         path.addArc(center: arcCenter, radius: arcRadius, startAngle: .degrees(0), endAngle: .degrees(180), clockwise: true)
                     }.stroke(Color.gray, lineWidth: 2)
                     
-                    Circle()
-                        .frame(width: 50, height: 50)
+                    Image("earth")
+                        .resizable()
+                        .frame(width: 150, height: 150)
                         .foregroundColor(.cyan)
-                        .shadow(color: .cyan, radius: 10)
                         .position(x: circleX, y: circleY)
                     
                     ZStack {
@@ -45,16 +47,16 @@ struct Scene3View: View {
                         Image("sunWithSpot2").opacity(opacity2)
                         Image("sunWithSpot3").opacity(opacity3)
                     }
-                    .position(x: geo.size.width / 2, y: geo.size.height)
+                    .position(x: geo.size.width / 2 + 30, y: geo.size.height)
                     
                     Image("sunWithSpot4").opacity(opacity4)
-                        .position(x: geo.size.width / 2 - 14, y: geo.size.height)
+                        .position(x: geo.size.width / 2 + 16, y: geo.size.height)
                     
-                    HStack(spacing: 100) {
+                    HStack() {
                         Group {
-                            Image(systemName: "person.fill").resizable()
-                            Image(systemName: "person.fill").resizable()
-                            Image(systemName: "person.fill").resizable()
+                            Image("flare").resizable()
+                            Image("radi").resizable()
+                            Image("cme").resizable()
                         }
                         .scaledToFit()
                         .foregroundStyle(Color.white)

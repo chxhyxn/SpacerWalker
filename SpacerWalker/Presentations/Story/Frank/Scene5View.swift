@@ -7,6 +7,17 @@ struct Scene5View: View {
     @Binding var path: [Route]
 
     private let motionManager = MotionManager()
+    
+    private let narration1: [String] = [
+        "This friend’s name is Radi.",
+        "Radi is messy, always sprinkling cookie crumbs wherever he goes."
+    ]
+    
+    private let narration2: [String] = [
+        "Oops! Radi dropped crumbs again!",
+        "The crumbs got into a spaceship, and the astronaut sighed",
+        "“Not again… now it’s showing errors!”"
+    ]
 
     @State private var phase: Int = 1
 
@@ -150,6 +161,7 @@ struct Scene5View: View {
                             cameraState = .right
                             phase = 5
                         }
+                        AudioService.shared.playNarration(.scene9)
                         Task {
                             try? await Task.sleep(for: .seconds(5))
                             phase = 6
@@ -168,6 +180,28 @@ struct Scene5View: View {
                     NextButton(destination: Scene6View(path: $path))
                 }
             }
+            VStack {
+                Spacer()
+                if phase == 1 || phase == 2 {
+                    SubtitleView(
+                        sentences: narration1,
+                        typingSpeeds: [0.07, 0.07],
+                        holdDurations: [0.7]
+                    )
+                    .padding(.horizontal, 40)
+                    .padding(.bottom, 43)
+                }
+                
+                if phase == 5 || phase == 6 {
+                    SubtitleView(
+                        sentences: narration2,
+                        typingSpeeds: [0.07, 0.07, 0.07],
+                        holdDurations: [0.7, 0.7]
+                    )
+                    .padding(.horizontal, 40)
+                    .padding(.bottom, 43)
+                }
+            }
         }
         // motionManager
         .task {
@@ -178,6 +212,8 @@ struct Scene5View: View {
                 }
             }
 
+            AudioService.shared.playNarration(.scene7)
+            
             try? await Task.sleep(for: .seconds(5))
             phase = 2
         }
@@ -215,18 +251,18 @@ struct Scene5View: View {
         let baseSize = computedRadiWidth
         var new: [Stamp] = []
 
-        for _ in 0..<count {
+        for _ in 0 ..< count {
             let horizontalRange = baseSize * 0.8
             let verticalMin = baseSize * 0.6
             let verticalMax = baseSize * 1.8
 
-            let offsetX = CGFloat.random(in: -horizontalRange...horizontalRange)
+            let offsetX = CGFloat.random(in: -horizontalRange ... horizontalRange)
             let sign: CGFloat = Bool.random() ? -1 : 1
-            let offsetY = sign * CGFloat.random(in: verticalMin...verticalMax)
+            let offsetY = sign * CGFloat.random(in: verticalMin ... verticalMax)
 
-            let scale = CGFloat.random(in: 10...20)
-            let rotation = Angle.degrees(Double.random(in: 0...360))
-            let variant = Int.random(in: 1...4)
+            let scale = CGFloat.random(in: 10 ... 20)
+            let rotation = Angle.degrees(Double.random(in: 0 ... 360))
+            let variant = Int.random(in: 1 ... 4)
 
             let stamp = Stamp(
                 x: x + offsetX,
@@ -247,7 +283,7 @@ struct Scene5View: View {
 
         // Schedule fade-out and removal
         for id in new.map({ $0.id }) {
-            let delay = Double.random(in: 0.3...1.0)
+            let delay = Double.random(in: 0.3 ... 1.0)
             Task { @MainActor in
                 try? await Task.sleep(for: .seconds(delay))
                 if let idx = stamps.firstIndex(where: { $0.id == id }) {
@@ -273,4 +309,3 @@ struct Scene5View: View {
 #Preview {
     Scene5View(path: .constant([.story]))
 }
-

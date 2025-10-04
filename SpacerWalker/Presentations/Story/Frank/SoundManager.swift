@@ -12,6 +12,7 @@ class SoundManager {
 
     init() {
         setupAudioRecorder()
+        startMonitoring()
     }
 
     deinit {

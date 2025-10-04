@@ -6,7 +6,18 @@ import SwiftUI
 struct Scene6View: View {
     @Binding var path: [Route]
 
-    let soundManager: SoundManager = SoundManager()
+    @State var soundManager: SoundManager?
+
+    private let narration1: [String] = [
+        "This friend is called CME, the funny gassy friend.",
+        "Among the three friends, he’s the slowest…",
+        "but still, he can travel the long distance from the Sun to Earth in just a few days!",
+    ]
+
+    private let narration2: [String] = [
+        "When CME releases her gas, the lights flicker, satellites shake, and kids jump in surprise.",
+        "But she just can’t stop.",
+    ]
 
     @State private var phase: Int = 1
 
@@ -41,6 +52,7 @@ struct Scene6View: View {
             return cmeX
         }
     }
+
     @State private var cmeAngle: Double = 0
 
     @State private var hasTriggeredWind = false
@@ -83,32 +95,43 @@ struct Scene6View: View {
             // Character Layer
             ZStack {
                 // CME
-                Image(Int(computedCmeX) % 100 > 50 ? "cmeRunBig" : "cmeRunSmall")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(
-                        width: computedCmeWidth,
-                        height: computedCmeWidth
-                    )
-                    .rotationEffect(.degrees(cmeAngle), anchor: .bottomTrailing)
-                    .position(
-                        x: computedCmeX,
-                        y: 417
-                    )
-                
+                Image(
+                    Int(computedCmeX) % 100 > 50 ? "cmeRunBig" : "cmeRunSmall"
+                )
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(
+                    width: computedCmeWidth,
+                    height: computedCmeWidth
+                )
+                .rotationEffect(.degrees(cmeAngle), anchor: .bottomTrailing)
+                .position(
+                    x: computedCmeX,
+                    y: 417
+                )
+
                 // Fart stamps overlayed above CME
                 ForEach(fartStamps) { stamp in
                     Image("fart")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .frame(width: stamp.width * 0.35, height: stamp.width * 0.35)
+                        .frame(
+                            width: stamp.width * 0.35,
+                            height: stamp.width * 0.35
+                        )
                         .padding(.bottom, 90)
-                        .rotationEffect(.degrees(stamp.angle), anchor: .bottomTrailing)
+                        .rotationEffect(
+                            .degrees(stamp.angle),
+                            anchor: .bottomTrailing
+                        )
                         .position(x: stamp.x, y: stamp.y)
                         .offset(x: -stamp.width * 0.22, y: -stamp.width * 0.05)
                         .opacity(stamp.fadeOut ? 0 : 1)
                         .scaleEffect(stamp.fadeOut ? 1.25 : 1.0)
-                        .animation(.easeOut(duration: 0.35), value: stamp.fadeOut)
+                        .animation(
+                            .easeOut(duration: 0.35),
+                            value: stamp.fadeOut
+                        )
                 }
             }
 
@@ -137,6 +160,7 @@ struct Scene6View: View {
                             cameraState = .right
                             phase = 5
                         }
+                        AudioService.shared.playNarration(.scene12)
                         Task {
                             try? await Task.sleep(for: .seconds(5))
                             phase = 6
@@ -155,17 +179,43 @@ struct Scene6View: View {
                     NextButton(destination: Scene13View(path: $path))
                 }
             }
+
+            VStack {
+                Spacer()
+                if phase == 1 || phase == 2 {
+                    SubtitleView(
+                        sentences: narration1,
+                        typingSpeeds: [0.07, 0.07, 0.07],
+                        holdDurations: [0.7, 0.7]
+                    )
+                    .padding(.horizontal, 40)
+                    .padding(.bottom, 43)
+                }
+
+                if phase == 5 || phase == 6 {
+                    SubtitleView(
+                        sentences: narration2,
+                        typingSpeeds: [0.07, 0.07],
+                        holdDurations: [0.7]
+                    )
+                    .padding(.horizontal, 40)
+                    .padding(.bottom, 43)
+                }
+            }
         }
         .task {
-            soundManager.startMonitoring()
+            AudioService.shared.playNarration(.scene10)
             try? await Task.sleep(for: .seconds(5))
             phase = 2
         }
         .onReceive(soundDetectTimer) { _ in
             if hasTriggeredWind { return }
             if phase != 3 { return }
+            if soundManager == nil { soundManager = SoundManager() }
+            guard let soundManager else { return }
             if soundManager.soundLevel > 0.9 {
                 hasTriggeredWind = true
+                self.soundManager = nil
                 Task { @MainActor in
                     await handleWindDetect()
                 }
@@ -186,7 +236,7 @@ struct Scene6View: View {
             step += 1
             try? await Task.sleep(for: .milliseconds(30))
         }
-        
+
         withAnimation {
             phase = 4
         }
@@ -240,4 +290,3 @@ struct Scene6View: View {
 #Preview {
     Scene6View(path: .constant([.story]))
 }
-

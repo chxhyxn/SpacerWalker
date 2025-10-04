@@ -8,6 +8,17 @@ struct Scene4View: View {
 
     private let motionManager = MotionManager()
 
+    private let narration1: [String] = [
+        "This friend’s name is Flare.",
+        "He’s always in such a hurry that he can reach Earth in just 8 minutes, the fastest of the three."
+    ]
+    
+    private let narration2: [String] = [
+        "But Flare is so fast, that every time he passes by, he disrupts Earth’s GPS satellites.",
+        "A farmer grumbled, “Oh no, the GPS isn’t working! My field rows are all crooked.",
+        "Flare must have come by again…”"
+    ]
+    
     @State private var phase: Int = 1
     @State private var showPhase1Button: Bool = false
 
@@ -120,6 +131,7 @@ struct Scene4View: View {
                             cameraState = .right
                             phase = 5
                         }
+                        AudioService.shared.playNarration(.scene6)
                         Task {
                             try? await Task.sleep(for: .seconds(5))
                             phase = 6
@@ -138,6 +150,29 @@ struct Scene4View: View {
                     NextButton(destination: Scene5View(path: $path))
                 }
             }
+            
+            VStack {
+                Spacer()
+                if phase == 1 || phase == 2 {
+                    SubtitleView(
+                        sentences: narration1,
+                        typingSpeeds: [0.07, 0.07],
+                        holdDurations: [0.7]
+                    )
+                    .padding(.horizontal, 40)
+                    .padding(.bottom, 43)
+                }
+                
+                if phase == 5 || phase == 6 {
+                    SubtitleView(
+                        sentences: narration2,
+                        typingSpeeds: [0.07, 0.08, 0.07],
+                        holdDurations: [1.4, 1.0]
+                    )
+                    .padding(.horizontal, 40)
+                    .padding(.bottom, 43)
+                }
+            }
         }
         // motionManager
         .task {
@@ -150,6 +185,8 @@ struct Scene4View: View {
             }
 
             physicsTask = Task { await runPhysicsLoop() }
+            
+            AudioService.shared.playNarration(.scene4)
 
             try? await Task.sleep(for: .seconds(5))
             phase = 2
@@ -185,10 +222,10 @@ struct Scene4View: View {
         let xMargin = max(screenWidth * 2 - flareWidth / 2, 0)
 
         let accelPerG: CGFloat = 16000
-        let dampingPerSecond: Double = 3.0
+        let dampingPerSecond = 3.0
 
         let ay = flareTiltAccel.dy * accelPerG
-        if ay > 0 && phase == 3 {
+        if ay > 0, phase == 3 {
             flareVelocity.dy += ay * CGFloat(dt)
 
             let damping = CGFloat(exp(-dampingPerSecond * dt))

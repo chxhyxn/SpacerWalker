@@ -53,16 +53,7 @@ struct Scene6View: View {
             HStack(spacing: 0) {
                 // 왼쪽
                 VStack(spacing: 0) {
-                    if cameraState == .whole { Spacer() }
-                    Color.red
-                        .frame(
-                            width: cameraState == .whole
-                                ? screenWidth / 2 : screenWidth,
-                            height: cameraState == .whole
-                                ? screenHeight / 2 : screenHeight
-                        )
-                        .opacity(0.5)
-                    if cameraState == .whole { Spacer() }
+                    Spacer()
                 }
                 .frame(
                     width: cameraState == .whole
@@ -72,16 +63,7 @@ struct Scene6View: View {
 
                 // 오른쪽
                 VStack(spacing: 0) {
-                    if cameraState == .whole { Spacer() }
-                    Color.blue
-                        .frame(
-                            width: cameraState == .whole
-                                ? screenWidth / 2 : screenWidth,
-                            height: cameraState == .whole
-                                ? screenHeight / 2 : screenHeight
-                        )
-                        .opacity(0.5)
-                    if cameraState == .whole { Spacer() }
+                    Spacer()
                 }
                 .frame(
                     width: cameraState == .whole
@@ -90,7 +72,7 @@ struct Scene6View: View {
                 )
             }
             .background(
-                Image("SampleBackground")
+                Image("4")
                     .resizable()
                     .scaledToFill()
             )
@@ -162,6 +144,7 @@ struct Scene6View: View {
         }
         .onReceive(soundDetectTimer) { _ in
             if hasTriggeredWind { return }
+            if phase != 3 { return }
             if soundManager.soundLevel > 0.9 {
                 handleWindDetect()
                 hasTriggeredWind = true

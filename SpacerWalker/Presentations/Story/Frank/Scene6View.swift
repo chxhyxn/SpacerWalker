@@ -1,15 +1,168 @@
 //  Copyright © 2025 NASA INTERNATIONAL SPACE APPS CHALLENGE Team SPACEWALK. All rights reserved.
 
+internal import Combine
 import SwiftUI
 
 struct Scene6View: View {
     @Binding var path: [Route]
 
-    var body: some View {
-        NavigationLink(destination: Scene7View(path: $path)) {
-            Text("다음")
+    let soundManager: SoundManager = SoundManager()
+
+    private let screenWidth: CGFloat = 1210
+    private let screenHeight: CGFloat = 835
+
+    @State private var cameraState: CameraState = .left
+    private var backgroundX: CGFloat {
+        if cameraState == .left {
+            return screenWidth
+        } else if cameraState == .right {
+            return 0
+        } else {
+            return screenWidth / 2
         }
+    }
+
+    @State var cmeWidth: CGFloat = 100
+    private var computedCmeWidth: CGFloat {
+        if cameraState == .whole {
+            return cmeWidth / 2
+        } else {
+            return cmeWidth
+        }
+    }
+
+    @State var cmeX: CGFloat = 50
+    private var computedCmeX: CGFloat {
+        if cameraState == .whole {
+            return cmeX / 2
+        } else {
+            return cmeX
+        }
+    }
+
+    @State private var hasTriggeredWind = false
+
+    let soundDetectTimer = Timer.publish(every: 0.03, on: .main, in: .common)
+        .autoconnect()
+
+    var body: some View {
+        ZStack {
+            // Background Layer
+            HStack(spacing: 0) {
+                // 왼쪽
+                VStack(spacing: 0) {
+                    if cameraState == .whole { Spacer() }
+                    Color.red
+                        .frame(
+                            width: cameraState == .whole
+                                ? screenWidth / 2 : screenWidth,
+                            height: cameraState == .whole
+                                ? screenHeight / 2 : screenHeight
+                        )
+                        .opacity(0.5)
+                    if cameraState == .whole { Spacer() }
+                }
+                .frame(
+                    width: cameraState == .whole
+                        ? screenWidth / 2 : screenWidth,
+                    height: screenHeight
+                )
+
+                // 오른쪽
+                VStack(spacing: 0) {
+                    if cameraState == .whole { Spacer() }
+                    Color.blue
+                        .frame(
+                            width: cameraState == .whole
+                                ? screenWidth / 2 : screenWidth,
+                            height: cameraState == .whole
+                                ? screenHeight / 2 : screenHeight
+                        )
+                        .opacity(0.5)
+                    if cameraState == .whole { Spacer() }
+                }
+                .frame(
+                    width: cameraState == .whole
+                        ? screenWidth / 2 : screenWidth,
+                    height: screenHeight
+                )
+            }
+            .background(
+                Image("SampleBackground")
+                    .resizable()
+                    .scaledToFill()
+            )
+            .position(x: backgroundX, y: screenHeight / 2)
+
+            // Character Layer
+            ZStack {
+                // CME
+                Circle()
+                    .fill(.red)
+                    .frame(
+                        width: computedCmeWidth,
+                        height: computedCmeWidth
+                    )
+                    .position(
+                        x: computedCmeX,
+                        y: 417
+                    )
+            }
+
+            VStack {
+                Button {
+                    withAnimation {
+                        cameraState = .whole
+                    }
+                } label: {
+                    Text("whole")
+                }
+
+                Button {
+                    withAnimation {
+                        cameraState = .left
+                    }
+                } label: {
+                    Text("left")
+                }
+
+                Button {
+                    withAnimation {
+                        cameraState = .right
+                    }
+                } label: {
+                    Text("right")
+                }
+                NextButton(destination: Scene7View(path: $path))
+            }
+            .tint(.white)
+        }
+        .task {
+            soundManager.startMonitoring()
+        }
+        .onReceive(soundDetectTimer) { _ in
+            if hasTriggeredWind { return }
+            if soundManager.soundLevel > 0.9 {
+                handleWindDetect()
+                hasTriggeredWind = true
+            }
+        }
+        .ignoresSafeArea(.all)
         .navigationBarBackButtonHidden()
+    }
+
+    private func handleWindDetect() {
+        let xMargin = max(screenWidth * 2 + cmeWidth / 2, 0)
+
+        withAnimation(.timingCurve(0.5, 0.0, 1.0, 1.0, duration: 2.5)) {
+            cmeX = xMargin
+        }
+    }
+
+    enum CameraState {
+        case left
+        case right
+        case whole
     }
 }
 

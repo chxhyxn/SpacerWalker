@@ -1,15 +1,211 @@
 //  Copyright © 2025 NASA INTERNATIONAL SPACE APPS CHALLENGE Team SPACEWALK. All rights reserved.
 
+internal import Combine
 import SwiftUI
 
 struct Scene4View: View {
     @Binding var path: [Route]
 
-    var body: some View {
-        NavigationLink(destination: Scene5View(path: $path)) {
-            Text("다음")
+    private let motionManager = MotionManager()
+
+    @State private var flareVelocity: CGVector = .zero
+    @State private var flareTiltAccel: CGVector = .zero
+
+    @State private var tiltTask: Task<Void, Never>? = nil
+    @State private var physicsTask: Task<Void, Never>? = nil
+
+    private let screenWidth: CGFloat = 1210
+    private let screenHeight: CGFloat = 835
+
+    @State private var cameraState: CameraState = .left
+    private var backgroundX: CGFloat {
+        if cameraState == .left {
+            return screenWidth
+        } else if cameraState == .right {
+            return 0
+        } else {
+            return screenWidth / 2
         }
+    }
+
+    @State var flareWidth: CGFloat = 100
+    private var computedFlareWidth: CGFloat {
+        if cameraState == .whole {
+            return flareWidth / 2
+        } else {
+            return flareWidth
+        }
+    }
+
+    @State var flareX: CGFloat = 50
+    private var computedFlareX: CGFloat {
+        if cameraState == .whole {
+            return flareX / 2
+        } else {
+            return flareX
+        }
+    }
+    
+    var body: some View {
+        ZStack {
+            // Background Layer
+            HStack(spacing: 0) {
+                // 왼쪽
+                VStack(spacing: 0) {
+                    if cameraState == .whole { Spacer() }
+                    Color.red
+                        .frame(
+                            width: cameraState == .whole
+                                ? screenWidth / 2 : screenWidth,
+                            height: cameraState == .whole
+                                ? screenHeight / 2 : screenHeight
+                        )
+                        .opacity(0.5)
+                    if cameraState == .whole { Spacer() }
+                }
+                .frame(
+                    width: cameraState == .whole
+                        ? screenWidth / 2 : screenWidth,
+                    height: screenHeight
+                )
+
+                // 오른쪽
+                VStack(spacing: 0) {
+                    if cameraState == .whole { Spacer() }
+                    Color.blue
+                        .frame(
+                            width: cameraState == .whole
+                                ? screenWidth / 2 : screenWidth,
+                            height: cameraState == .whole
+                                ? screenHeight / 2 : screenHeight
+                        )
+                        .opacity(0.5)
+                    if cameraState == .whole { Spacer() }
+                }
+                .frame(
+                    width: cameraState == .whole
+                        ? screenWidth / 2 : screenWidth,
+                    height: screenHeight
+                )
+            }
+            .background(
+                Image("SampleBackground")
+                    .resizable()
+                    .scaledToFill()
+            )
+            .position(x: backgroundX, y: screenHeight / 2)
+
+            // Character Layer
+            ZStack {
+                // Flare
+                Circle()
+                    .fill(.orange)
+                    .frame(
+                        width: computedFlareWidth,
+                        height: computedFlareWidth
+                    )
+                    .position(
+                        x: computedFlareX,
+                        y: 417
+                    )
+            }
+
+            VStack {
+                Button {
+                    withAnimation {
+                        cameraState = .whole
+                    }
+                } label: {
+                    Text("whole")
+                }
+
+                Button {
+                    withAnimation {
+                        cameraState = .left
+                    }
+                } label: {
+                    Text("left")
+                }
+
+                Button {
+                    withAnimation {
+                        cameraState = .right
+                    }
+                } label: {
+                    Text("right")
+                }
+                NextButton(destination: Scene5View(path: $path))
+            }
+            .tint(.white)
+        }
+        // motionManager
+        .task {
+            motionManager.start()
+
+            tiltTask = Task {
+                for await vec in motionManager.tiltUnitStream {
+                    await handleTiltVector(vec)
+                }
+            }
+
+            physicsTask = Task { await runPhysicsLoop() }
+        }
+        .ignoresSafeArea(.all)
         .navigationBarBackButtonHidden()
+    }
+
+    private func handleTiltVector(_ vec: CGVector) async {
+        let deadzone: CGFloat = 0.02
+        let uy = abs(vec.dy) < deadzone ? 0 : CGFloat(vec.dy)
+
+        let smoothing: CGFloat = 0.15
+        flareTiltAccel.dy = flareTiltAccel.dy * (1 - smoothing) + uy * smoothing
+    }
+
+    private func runPhysicsLoop() async {
+        var last = CACurrentMediaTime()
+        while !Task.isCancelled {
+            let now = CACurrentMediaTime()
+            let dt = now - last
+            last = now
+
+            await MainActor.run {
+                flarePhysicsStep(dt: dt)
+            }
+
+            try? await Task.sleep(for: .milliseconds(16))
+        }
+    }
+
+    private func flarePhysicsStep(dt: Double) {
+        let xMargin = max(screenWidth * 2 + flareWidth / 2, 0)
+
+        let accelPerG: CGFloat = 16000
+        let dampingPerSecond: Double = 3.0
+
+        let ay = flareTiltAccel.dy * accelPerG
+        if ay > 0 {
+            flareVelocity.dy += ay * CGFloat(dt)
+            
+            let damping = CGFloat(exp(-dampingPerSecond * dt))
+            flareVelocity.dy *= damping
+            
+            var px = flareX + flareVelocity.dy * CGFloat(dt)
+            
+            if px < flareWidth / 2 {
+                px = flareWidth / 2
+            } else if px > xMargin {
+                px = xMargin
+            }
+            
+            flareX = px
+        }
+    }
+
+    enum CameraState {
+        case left
+        case right
+        case whole
     }
 }
 

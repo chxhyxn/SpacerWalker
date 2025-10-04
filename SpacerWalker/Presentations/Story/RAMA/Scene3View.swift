@@ -20,10 +20,6 @@ struct Scene3View: View {
                 
                 let circleX = arcCenter.x + arcRadius * cos(angle.radians)
                 let circleY = arcCenter.y + arcRadius * sin(angle.radians)
-                
-                let minImageSize: CGFloat = 150
-                let maxImageSize: CGFloat = 300
-                let currentImageSize = minImageSize + (maxImageSize - minImageSize) * (currentValue / 100)
 
                 let opacity2 = min(max((currentValue - 25) / 33, 0), 1)
                 let opacity3 = min(max((currentValue - 50) / 33, 0), 1)
@@ -32,8 +28,16 @@ struct Scene3View: View {
                 ZStack {
                     Image("spaceBackground")
                     
+                    YearPickerView(value: $value, dragOffset: $dragOffset)
+                    
                     Path { path in
-                        path.addArc(center: arcCenter, radius: arcRadius, startAngle: .degrees(0), endAngle: .degrees(180), clockwise: true)
+                        path.addArc(
+                            center: arcCenter,
+                            radius: arcRadius,
+                            startAngle: .degrees(0),
+                            endAngle: .degrees(180),
+                            clockwise: true
+                        )
                     }.stroke(Color.gray, lineWidth: 2)
                     
                     Image("earth")
@@ -52,16 +56,13 @@ struct Scene3View: View {
                     Image("sunWithSpot4").opacity(opacity4)
                         .position(x: geo.size.width / 2 + 16, y: geo.size.height)
                     
-                    HStack() {
-                        Group {
-                            Image("flare").resizable()
-                            Image("radi").resizable()
-                            Image("cme").resizable()
-                        }
-                        .scaledToFit()
-                        .foregroundStyle(Color.white)
-                        .frame(width: currentImageSize)
-                    }.position(x: geo.size.width / 2, y: geo.size.height - 200)
+                    HStack(spacing: -25) {
+                        Image("family").resizable()
+                            .scaledToFit()
+                            .foregroundStyle(Color.white)
+                            .frame(width: 500)
+                    }
+                    .position(x: geo.size.width / 2, y: geo.size.height - 400)
                     
                     if currentValue >= 100 {
                         NextButton(destination: Scene4View(path: $path))

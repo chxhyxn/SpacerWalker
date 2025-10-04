@@ -2,8 +2,6 @@
 
 import SwiftUI
 
-import SwiftUI
-
 struct SubtitleView: View {
     let sentences: [String]
     
@@ -21,7 +19,17 @@ struct SubtitleView: View {
     
     var body: some View {
         Text(displayed)
+            .font(.oneMobileRegular38)
             .multilineTextAlignment(.leading)
+            .frame(maxWidth: .infinity, alignment: .center)
+            .frame(height: 134)
+            .frame(maxWidth: .infinity)
+            .background(
+                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                    .fill(Color(red: 166.0/255.0, green: 166.0/255.0, blue: 166.0/255.0).opacity(0.2))
+                    .stroke(.white, lineWidth: 1)
+                    .shadow(color: .black.opacity(0.25), radius: 8, x: 0, y: 4)
+            )
             .onAppear { startTyping() }
     }
     
@@ -70,14 +78,12 @@ private extension Array {
 #Preview {
     VStack(spacing: 30) {
         SubtitleView(sentences: ["이것은 기본 속도 테스트입니다."])
-            .font(.title)
         
         SubtitleView(sentences: ["이것은 기본 속도 테스트입니다."])
-            .font(.title)
         
-        SubtitleView(sentences: ["이것은 기본 속도 테스트입니다."])
-            .font(.title)
+        SubtitleView(sentences: ["Today, I’d like to tell you a fun story about the Sun and its three best friends."])
     }
     .padding()
     .preferredColorScheme(.dark)
 }
+

@@ -7,7 +7,7 @@ struct Scene14View: View {
     @State private var lastDragOffset: CGFloat = 0
     @State private var progress: Double = 0.0
     @State private var screenSize: CGSize = .zero
-    private let initDragOffset: CGFloat = 100
+    private let initDragOffset: CGFloat = 0
 
     var body: some View {
         GeometryReader { geo in
@@ -21,13 +21,15 @@ struct Scene14View: View {
 
             ZStack(alignment: .bottom) {
                 sky
-                
+
                 aurora
-                
+
+                friends
+
                 earth
-                
+
                 people
-                
+
                 slider
             }
         }
@@ -60,7 +62,18 @@ struct Scene14View: View {
             }
         }
     }
-    
+
+    var friends: some View {
+        Image("AuroraFriends")
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .frame(width: screenSize.height / 4)
+            .position(
+                x: screenSize.width - dragOffset - initDragOffset - 80,
+                y: screenSize.height / 3
+            )
+    }
+
     var people: some View {
         HStack {
             Spacer()
@@ -71,7 +84,7 @@ struct Scene14View: View {
                 .padding(120)
         }
     }
-    
+
     var earth: some View {
         Circle()
             .foregroundColor(.blue)
@@ -89,7 +102,7 @@ struct Scene14View: View {
                     .onChanged { value in
                         let w = value.translation.width
                         dragOffset = (lastDragOffset - w).clamped(
-                            to: 0...(screenSize.width - initDragOffset + 10)
+                            to: 0...(screenSize.width - initDragOffset + 100)
                         )
                         progress = dragOffset / screenSize.width
                     }

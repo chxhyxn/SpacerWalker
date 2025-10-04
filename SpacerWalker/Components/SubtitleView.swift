@@ -25,13 +25,15 @@ struct SubtitleView: View {
             .frame(maxWidth: .infinity, alignment: .center)
             .frame(height: 134)
             .padding(.horizontal, 24)
-            .background(.ultraThinMaterial)
+            .background(Color.narrationBackground)
+            .background(.ultraThinMaterial.opacity(0.9))
+            .preferredColorScheme(.dark)
+            .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
             .overlay {
                 RoundedRectangle(cornerRadius: 20, style: .continuous)
-                    .fill(.narrationBackground)
                     .stroke(.white, lineWidth: 1)
-                    .shadow(color: .white.opacity(0.2), radius: 40, x: 0, y: 0)
             }
+            .shadow(color: .white.opacity(0.2), radius: 40, x: 0, y: 0)
             .onAppear { startTyping() }
     }
 

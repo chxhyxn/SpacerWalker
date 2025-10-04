@@ -32,6 +32,8 @@ struct Scene3View: View {
 
                 ZStack {
                     Image("spaceBackground")
+                        .resizable()
+                        .scaledToFill()
 
                     YearPickerView(value: $value, dragOffset: $dragOffset)
 

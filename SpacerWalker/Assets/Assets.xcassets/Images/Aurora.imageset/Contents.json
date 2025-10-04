@@ -1,12 +1,12 @@
 {
   "images" : [
     {
-      "filename" : "Aurora 1-2.png",
+      "filename" : "Aurora.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Aurora 1-1.png",
+      "filename" : "Aurora 2.png",
       "idiom" : "universal",
       "scale" : "2x"
     },

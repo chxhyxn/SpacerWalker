@@ -10,8 +10,10 @@ struct Scene14View: View {
     @State private var friendsXOffset: CGFloat = -200
     @State private var isNextButton: Bool = false
     @State private var showDragGuide: Bool = true
+    @State private var isCheerSoundEffectPlaying: Bool = false
     private let initFriendOffset: CGFloat = -8
     private let dragRatio: CGFloat = 1.35
+    private let audioService = AudioService.shared
 
     var body: some View {
         GeometryReader { geo in
@@ -22,20 +24,7 @@ struct Scene14View: View {
 
                 aurora
 
-                handGuide
-
-                // MARK: White line
-                Rectangle()
-                    .foregroundColor(.white)
-                    .frame(width: 5, height: screenSize.height * 2)
-                    .position(
-                        x: screenSize.width - dragOffset + 7.5,
-                        y: screenSize.height / 2
-                    )
-
                 friends
-
-                // earth
 
                 people
 
@@ -46,6 +35,11 @@ struct Scene14View: View {
         }
         .ignoresSafeArea()
         .navigationBarBackButtonHidden()
+        .onDisappear {
+            if isCheerSoundEffectPlaying {
+                audioService.stopSoundEffect()
+            }
+        }
     }
 
     func initScreenSize(_ geo: GeometryProxy) -> some View {
@@ -85,40 +79,49 @@ struct Scene14View: View {
         }
     }
 
-    var handGuide: some View {
-        // MARK: Hand guide
-        AnimSwipeGestureView()
-            .position(
-                x: screenSize.width - dragOffset - 200,
-                y: 150
-            )
-            .animFadeIn(order: 10, visible: $showDragGuide)
-    }
-
     var friends: some View {
-        // MARK: Friends
-        Image("AuroraFriends")
-            .resizable()
-            .aspectRatio(contentMode: .fit)
-            .frame(width: 208)
-            .overlay {
-                // MARK: Guide
-                Image("Scene15Guide")
-                    .position(x: -150, y: 200)
-                    .animFadeIn(order: 8, visible: $showDragGuide)
-            }
-            .position(
-                x: screenSize.width - dragOffset - initFriendOffset - 78
-                    - friendsXOffset,
-                y: screenSize.height / 3
-            )
-            .onAppear {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    withAnimation(.easeOut(duration: 0.25)) {
-                        friendsXOffset = 0
+        ZStack {
+            // MARK: Hand guide
+            AnimSwipeGestureView()
+                .position(
+                    x: screenSize.width - dragOffset - 200,
+                    y: 150
+                )
+                .animFadeIn(order: 10, visible: $showDragGuide)
+
+            // MARK: White line
+            Rectangle()
+                .foregroundColor(.white)
+                .frame(width: 5, height: screenSize.height * 2)
+                .position(
+                    x: screenSize.width - dragOffset + 7.5,
+                    y: screenSize.height / 2
+                )
+
+            // MARK: Friends
+            Image("AuroraFriends")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 208)
+                .overlay {
+                    // MARK: Guide
+                    Image("Scene15Guide")
+                        .position(x: -150, y: 200)
+                        .animFadeIn(order: 8, visible: $showDragGuide)
+                }
+                .position(
+                    x: screenSize.width - dragOffset - initFriendOffset - 78
+                        - friendsXOffset,
+                    y: screenSize.height / 3
+                )
+                .onAppear {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        withAnimation(.easeOut(duration: 0.25)) {
+                            friendsXOffset = 0
+                        }
                     }
                 }
-            }
+        }
     }
 
     var people: some View {
@@ -165,12 +168,19 @@ struct Scene14View: View {
                         // MARK: Drag start
                         let w = value.translation.width * dragRatio
                         dragOffset = (lastDragOffset - w).clamped(
-                            to: 0 ... (screenSize.width - initFriendOffset + 100)
+                            to: 0...(screenSize.width - initFriendOffset + 100)
                         )
                         withAnimation {
                             progress = dragOffset / screenSize.width
                             isNextButton = progress >= 1
                             showDragGuide = progress == 0
+                            if progress > 0.5 && !isCheerSoundEffectPlaying {
+                                self.isCheerSoundEffectPlaying = true
+                                audioService.playSoundEffect("Cheer")
+                            } else if progress == 0 {
+                                self.isCheerSoundEffectPlaying = false
+                                audioService.stopSoundEffect()
+                            }
                         }
                     }
                     .onEnded { _ in

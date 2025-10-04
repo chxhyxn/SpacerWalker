@@ -8,7 +8,7 @@ final class AudioService: NSObject {
 
     private var narrationPlayer: AVAudioPlayer?
     private var bgmPlayer: AVAudioPlayer?
-    private var sfxPlayers: [String: AVAudioPlayer] = [:]
+    private var soundEffectPlayer: AVAudioPlayer?
 
     private(set) var currentNarration: Narration?
 
@@ -54,6 +54,27 @@ extension AudioService {
         narrationPlayer?.stop()
         narrationPlayer = nil
         currentNarration = nil
+    }
+}
+
+extension AudioService {
+    func playSoundEffect(_ filename: String) {
+        guard let url = Bundle.main.url(forResource: filename, withExtension: "mp3") else { return }
+
+        do {
+            let player = try AVAudioPlayer(contentsOf: url)
+            player.delegate = self
+            player.prepareToPlay()
+            player.play()
+            soundEffectPlayer = player
+        } catch {
+            print("❌ Error playing \(filename): \(error.localizedDescription)")
+        }
+    }
+    
+    func stopSoundEffect() {
+        soundEffectPlayer?.stop()
+        soundEffectPlayer = nil
     }
 }
 

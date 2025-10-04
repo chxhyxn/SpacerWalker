@@ -56,13 +56,11 @@ struct Scene3View: View {
                     Image("sunWithSpot4").opacity(opacity4)
                         .position(x: geo.size.width / 2 + 16, y: geo.size.height)
                     
-                    HStack(spacing: -25) {
-                        Image("family").resizable()
-                            .scaledToFit()
-                            .foregroundStyle(Color.white)
-                            .frame(width: 500)
-                    }
-                    .position(x: geo.size.width / 2, y: geo.size.height - 400)
+                    Image("family").resizable()
+                        .scaledToFit()
+                        .foregroundStyle(Color.white)
+                        .frame(width: 500)
+                        .position(x: geo.size.width / 2, y: geo.size.height - 400)
                     
                     if currentValue >= 100 {
                         NextButton(destination: Scene4View(path: $path))

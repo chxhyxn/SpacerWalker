@@ -4,10 +4,9 @@ import SwiftUI
 
 @Observable
 final class Scene13ViewModel {
-    var counter: Int = 0
+    private(set) var isNextButton: Bool = false
     
-    func add() {
-        print("Hi")
-        counter += 1
+    func showNextButton() {
+        isNextButton = true
     }
 }

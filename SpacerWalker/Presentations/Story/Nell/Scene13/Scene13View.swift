@@ -10,22 +10,32 @@ struct Scene13View: View {
         GeometryReader { geo in
             let w = geo.size.width
             let h = geo.size.height
-            ZStack {
+            ZStack(alignment: .trailing) {
                 // MARK: Background
                 backgroundVideo
                     .frame(width: w, height: h)
-                
+
                 // MARK: Characters
                 characters
                     .position(x: w - 200, y: h - 150)
-                
-                // MARK: Next button
-                NextButton(destination: Scene14View())
+
+                if viewModel.isNextButton {
+                    // MARK: Next button
+                    NextButton(destination: Scene14View())
+                        .animFadeIn()
+                        .padding(16)
+                }
             }
-            .frame(width: .infinity, height: .infinity)
         }
         .ignoresSafeArea()
         .navigationBarBackButtonHidden()
+        .onAppear {
+            DispatchQueue.main.asyncAfter(
+                deadline: .now() + 1
+            ) {
+                viewModel.showNextButton()
+            }
+        }
     }
 
     var characters: some View {

@@ -27,7 +27,7 @@ struct Scene5View: View {
         }
     }
 
-    @State var radiWidth: CGFloat = 100
+    @State var radiWidth: CGFloat = 200
     private var computedRadiWidth: CGFloat {
         if cameraState == .whole {
             return radiWidth / 2
@@ -36,7 +36,7 @@ struct Scene5View: View {
         }
     }
 
-    @State var radiX: CGFloat = 50
+    @State var radiX: CGFloat = 100
     private var computedRadiX: CGFloat {
         if cameraState == .whole {
             return radiX / 2
@@ -74,7 +74,7 @@ struct Scene5View: View {
                 )
             }
             .background(
-                Image("4")
+                Image("backgroundFrank")
                     .resizable()
                     .scaledToFill()
             )
@@ -83,8 +83,9 @@ struct Scene5View: View {
             // Character Layer
             ZStack {
                 // Radi
-                Circle()
-                    .fill(.pink)
+                Image("radiRun")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
                     .frame(
                         width: computedRadiWidth,
                         height: computedRadiWidth

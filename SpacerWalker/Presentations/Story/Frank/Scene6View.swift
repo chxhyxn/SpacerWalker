@@ -24,7 +24,7 @@ struct Scene6View: View {
         }
     }
 
-    @State var cmeWidth: CGFloat = 100
+    @State var cmeWidth: CGFloat = 200
     private var computedCmeWidth: CGFloat {
         if cameraState == .whole {
             return cmeWidth / 2
@@ -33,7 +33,7 @@ struct Scene6View: View {
         }
     }
 
-    @State var cmeX: CGFloat = 50
+    @State var cmeX: CGFloat = 100
     private var computedCmeX: CGFloat {
         if cameraState == .whole {
             return cmeX / 2
@@ -72,7 +72,7 @@ struct Scene6View: View {
                 )
             }
             .background(
-                Image("4")
+                Image("backgroundFrank")
                     .resizable()
                     .scaledToFill()
             )
@@ -81,8 +81,9 @@ struct Scene6View: View {
             // Character Layer
             ZStack {
                 // CME
-                Circle()
-                    .fill(.red)
+                Image(Int(computedCmeX) % 100 > 50 ? "cmeRunBig" : "cmeRunSmall")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
                     .frame(
                         width: computedCmeWidth,
                         height: computedCmeWidth
@@ -146,20 +147,24 @@ struct Scene6View: View {
             if hasTriggeredWind { return }
             if phase != 3 { return }
             if soundManager.soundLevel > 0.9 {
-                handleWindDetect()
                 hasTriggeredWind = true
+                Task { @MainActor in
+                    await handleWindDetect()
+                }
             }
         }
         .ignoresSafeArea(.all)
         .navigationBarBackButtonHidden()
     }
 
-    private func handleWindDetect() {
+    private func handleWindDetect() async {
         let xMargin = max(screenWidth * 2 - cmeWidth / 2, 0)
 
-        withAnimation(.timingCurve(0.5, 0.0, 1.0, 1.0, duration: 2.5)) {
-            cmeX = xMargin
+        while cmeX < xMargin {
+            cmeX += 10
+            try? await Task.sleep(for: .milliseconds(30))
         }
+        
         withAnimation {
             phase = 4
         }

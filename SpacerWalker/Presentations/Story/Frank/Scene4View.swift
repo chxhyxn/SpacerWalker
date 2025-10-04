@@ -31,7 +31,7 @@ struct Scene4View: View {
         }
     }
 
-    @State var flareWidth: CGFloat = 100
+    @State var flareWidth: CGFloat = 200
     private var computedFlareWidth: CGFloat {
         if cameraState == .whole {
             return flareWidth / 2
@@ -40,7 +40,7 @@ struct Scene4View: View {
         }
     }
 
-    @State var flareX: CGFloat = 50
+    @State var flareX: CGFloat = 100
     private var computedFlareX: CGFloat {
         if cameraState == .whole {
             return flareX / 2
@@ -74,7 +74,7 @@ struct Scene4View: View {
                 )
             }
             .background(
-                Image("4")
+                Image("backgroundFrank")
                     .resizable()
                     .scaledToFill()
             )
@@ -83,8 +83,9 @@ struct Scene4View: View {
             // Character Layer
             ZStack {
                 // Flare
-                Circle()
-                    .fill(.orange)
+                Image("flareRun")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
                     .frame(
                         width: computedFlareWidth,
                         height: computedFlareWidth

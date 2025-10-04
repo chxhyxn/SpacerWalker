@@ -11,6 +11,7 @@ struct Scene3View: View {
     @Binding var path: [Route]
 
     @State private var isNarrationEnded = false
+    @State private var showGuide = false
     @State private var value: Double = 0
     @State private var dragOffset: CGFloat = 0
 
@@ -80,6 +81,11 @@ struct Scene3View: View {
                         .frame(width: 110, height: 110)
                         .position(x: circleX, y: circleY)
                 }
+                
+                if showGuide {
+                    InteractionGuideView()
+                        .transition(.opacity)
+                }
             }
 
             VStack {
@@ -92,6 +98,12 @@ struct Scene3View: View {
                         holdDurations: [0.7],
                         onComplete: {
                             isNarrationEnded = true
+                            showGuide = true
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                                withAnimation {
+                                    showGuide = false
+                                }
+                            }
                         }
                     )
                     .padding(.horizontal, 40)

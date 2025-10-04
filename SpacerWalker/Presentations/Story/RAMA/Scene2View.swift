@@ -15,6 +15,7 @@ struct Scene2View: View {
             GeometryReader { geo in
                 Image("spaceBackground")
                     .resizable()
+                    .scaledToFill()
 
                 Image("sunWithSpot1")
                     .position(x: geo.size.width / 2 + 30, y: geo.size.height)

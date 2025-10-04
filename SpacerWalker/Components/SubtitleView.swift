@@ -13,6 +13,8 @@ struct SubtitleView: View {
     var holdDurations: [Double] = []
     var gapDurations: [Double] = []
 
+    var onComplete: (() -> Void)? = nil
+
     @State private var index: Int = 0
     @State private var displayed: String = ""
     @State private var isFinished: Bool = false
@@ -35,6 +37,11 @@ struct SubtitleView: View {
             }
             .shadow(color: .white.opacity(0.2), radius: 40, x: 0, y: 0)
             .onAppear { startTyping() }
+            .onChange(of: isFinished) { _, newValue in
+                if newValue {
+                    onComplete?()
+                }
+            }
     }
 
     private func startTyping() {

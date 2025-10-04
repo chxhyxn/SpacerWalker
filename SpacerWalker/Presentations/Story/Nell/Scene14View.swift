@@ -103,7 +103,7 @@ struct Scene14View: View {
             .frame(width: 208)
             .overlay {
                 // MARK: Guide
-                Image("scene15Guide")
+                Image("Scene15Guide")
                     .position(x: -150, y: 200)
                     .animFadeIn(order: 8, visible: $showDragGuide)
             }
@@ -147,7 +147,9 @@ struct Scene14View: View {
     }
 
     var earth: some View {
-        Circle()
+        Image("earth")
+            .resizable()
+            .scaledToFit()
             .foregroundColor(.blue)
             .position(
                 x: screenSize.width / 2 * 1.5,

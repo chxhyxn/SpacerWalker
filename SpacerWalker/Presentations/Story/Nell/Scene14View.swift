@@ -11,7 +11,7 @@ struct Scene14View: View {
     @State private var isNextButton: Bool = false
     @State private var showDragGuide: Bool = true
     private let initFriendOffset: CGFloat = -8
-    private let dragRatio: CGFloat = 1.25
+    private let dragRatio: CGFloat = 1.35
 
     var body: some View {
         GeometryReader { geo in
@@ -21,6 +21,17 @@ struct Scene14View: View {
                 sky
 
                 aurora
+
+                handGuide
+
+                // MARK: White line
+                Rectangle()
+                    .foregroundColor(.white)
+                    .frame(width: 5, height: screenSize.height * 2)
+                    .position(
+                        x: screenSize.width - dragOffset + 7.5,
+                        y: screenSize.height / 2
+                    )
 
                 friends
 
@@ -67,11 +78,21 @@ struct Scene14View: View {
                 Spacer()
                 Rectangle()
                     .frame(
-                        width: dragOffset + initFriendOffset,
+                        width: max(0, dragOffset + initFriendOffset),
                         height: screenSize.height
                     )
             }
         }
+    }
+
+    var handGuide: some View {
+        // MARK: Hand guide
+        AnimSwipeGestureView()
+            .position(
+                x: screenSize.width - dragOffset - 200,
+                y: 150
+            )
+            .animFadeIn(order: 10, visible: $showDragGuide)
     }
 
     var friends: some View {
@@ -79,14 +100,7 @@ struct Scene14View: View {
         Image("AuroraFriends")
             .resizable()
             .aspectRatio(contentMode: .fit)
-            .frame(width: screenSize.height / 4)
-            .background {
-                // MARK: White line
-                Rectangle()
-                    .foregroundColor(.white)
-                    .frame(width: 5, height: screenSize.height*2)
-                    .position(x: 182, y: screenSize.height/2)
-            }
+            .frame(width: 208)
             .overlay {
                 // MARK: Guide
                 Image("scene15Guide")
@@ -153,9 +167,13 @@ struct Scene14View: View {
                         dragOffset = (lastDragOffset - w).clamped(
                             to: 0...(screenSize.width - initFriendOffset + 100)
                         )
-                        progress = dragOffset / screenSize.width
-                        isNextButton = progress >= 1
-                        showDragGuide = progress == 0
+                        withAnimation {
+                            progress = dragOffset / screenSize.width
+                            isNextButton = progress >= 1
+                            if showDragGuide {
+                                showDragGuide = progress == 0
+                            }
+                        }
                     }
                     .onEnded { _ in
                         lastDragOffset = dragOffset

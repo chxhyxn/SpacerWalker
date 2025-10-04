@@ -35,9 +35,9 @@ extension View {
         duration: Double = 0.25,
         offsetX: CGFloat = 0,
         offsetY: CGFloat = 0,
-        order: Int = 0,
+        order: Int = 0
     ) -> some View {
-        self.modifier(
+        modifier(
             AnimSlideModifier(
                 duration: duration,
                 offsetX: offsetX,

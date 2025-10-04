@@ -6,7 +6,7 @@ import SwiftUI
 struct VideoPlayerView: UIViewControllerRepresentable {
     let player: AVPlayer
 
-    func makeUIViewController(context: Context) -> AVPlayerViewController {
+    func makeUIViewController(context _: Context) -> AVPlayerViewController {
         let controller = AVPlayerViewController()
         controller.player = player
         controller.showsPlaybackControls = false
@@ -14,10 +14,9 @@ struct VideoPlayerView: UIViewControllerRepresentable {
     }
 
     func updateUIViewController(
-        _ uiViewController: AVPlayerViewController,
-        context: Context
-    ) {
-    }
+        _: AVPlayerViewController,
+        context _: Context
+    ) {}
 }
 
 struct VideoPlayer: View {
@@ -28,6 +27,7 @@ struct VideoPlayer: View {
     private var ratio: CGFloat {
         videoSize.width / videoSize.height
     }
+
     private var autoPlay: Bool {
         progress == -1
     }
@@ -39,7 +39,7 @@ struct VideoPlayer: View {
         let url = Bundle.main.url(forResource: path, withExtension: "mp4")!
         let asset = AVAsset(url: url)
         let track = asset.tracks(withMediaType: .video).first!
-        videoSize = track.naturalSize.applying(track.preferredTransform)
+        self.videoSize = track.naturalSize.applying(track.preferredTransform)
         let player = AVPlayer(url: url)
         player.actionAtItemEnd = .none
         _player = State(initialValue: player)
@@ -76,7 +76,7 @@ struct VideoPlayer: View {
                 }
                 .onChange(of: progress) { _, newValue in
                     guard let duration = player.currentItem?.duration.seconds,
-                        duration > 0
+                          duration > 0
                     else { return }
                     let targetTime = CMTime(
                         seconds: newValue * duration,

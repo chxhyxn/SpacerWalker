@@ -10,7 +10,7 @@ struct Scene13View: View {
         "The three friends are parts of the Sun’s powerful forces.",
         "They travel with the Sun’s breath, the solar wind, a stream of charged particles flowing through space.",
         "This breath makes a giant invisible bubble around all the planets the heliosphere,",
-        "a shield that guards the solar system from space villains."
+        "a shield that guards the solar system from space villains.",
     ]
 
     var body: some View {
@@ -28,7 +28,7 @@ struct Scene13View: View {
         .navigationBarBackButtonHidden()
         .autoNarration(.scene13)
     }
-    
+
     var subtitle: some View {
         VStack {
             Spacer()

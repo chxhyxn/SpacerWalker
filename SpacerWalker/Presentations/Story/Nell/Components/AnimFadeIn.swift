@@ -55,7 +55,7 @@ extension View {
         order: Int = 0,
         visible: Binding<Bool> = Binding.constant(true)
     ) -> some View {
-        self.modifier(
+        modifier(
             AnimFadeInModifier(
                 duration: duration,
                 offsetY: offsetY,

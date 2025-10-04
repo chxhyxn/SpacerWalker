@@ -27,8 +27,8 @@ class VideoFramePlayerViewModel: ObservableObject {
 
     init(path: String) {
         let url = Bundle.main.url(forResource: path, withExtension: "mp4")!
-        asset = AVAsset(url: url)
-        imageGenerator = AVAssetImageGenerator(asset: asset)
+        self.asset = AVAsset(url: url)
+        self.imageGenerator = AVAssetImageGenerator(asset: asset)
         imageGenerator.appliesPreferredTrackTransform = true
         imageGenerator.requestedTimeToleranceBefore = .zero
         imageGenerator.requestedTimeToleranceAfter = .zero
@@ -50,14 +50,14 @@ class VideoFramePlayerViewModel: ObservableObject {
 
     private func loadCachedImage(frame: Int) -> CGImage? {
         if let url = frameCache[frame], let data = try? Data(contentsOf: url),
-            let uiImage = UIImage(data: data)
+           let uiImage = UIImage(data: data)
         {
             return uiImage.cgImage
         } else {
             // 디스크에 존재하는지 확인
             let url = cachePath(forFrame: frame)
             if let data = try? Data(contentsOf: url),
-                let uiImage = UIImage(data: data)
+               let uiImage = UIImage(data: data)
             {
                 frameCache[frame] = url
                 return uiImage.cgImage
@@ -126,8 +126,7 @@ struct VideoFramePlayer: View {
 extension AVAssetImageGenerator {
     func cgImage(at time: CMTime) async throws -> CGImage {
         try await withCheckedThrowingContinuation { continuation in
-            self.generateCGImagesAsynchronously(forTimes: [NSValue(time: time)])
-            { _, image, _, result, error in
+            self.generateCGImagesAsynchronously(forTimes: [NSValue(time: time)]) { _, image, _, result, error in
                 if let error = error {
                     continuation.resume(throwing: error)
                 } else if let image = image, result == .succeeded {

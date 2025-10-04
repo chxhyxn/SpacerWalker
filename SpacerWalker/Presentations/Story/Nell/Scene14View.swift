@@ -165,7 +165,7 @@ struct Scene14View: View {
                         // MARK: Drag start
                         let w = value.translation.width * dragRatio
                         dragOffset = (lastDragOffset - w).clamped(
-                            to: 0...(screenSize.width - initFriendOffset + 100)
+                            to: 0 ... (screenSize.width - initFriendOffset + 100)
                         )
                         withAnimation {
                             progress = dragOffset / screenSize.width

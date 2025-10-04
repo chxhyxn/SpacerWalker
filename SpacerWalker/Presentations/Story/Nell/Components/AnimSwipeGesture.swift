@@ -8,6 +8,7 @@ struct AnimSwipeGestureView: View {
     private var lineScale: CGFloat {
         Double(min(1, max(0, abs(offsetX) / 100)))
     }
+
     private let animation = Animation.easeInOut(duration: 0.8)
         .repeatForever(autoreverses: true)
 
@@ -26,7 +27,7 @@ struct AnimSwipeGestureView: View {
                 )
                 .frame(
                     width: lineWidth * lineScale,
-                    height: 4,
+                    height: 4
                 )
                 .padding(.bottom, 34)
                 .offset(x: -45)

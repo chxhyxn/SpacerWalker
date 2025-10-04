@@ -11,10 +11,16 @@ struct Scene13View: View {
             let w = geo.size.width
             let h = geo.size.height
             ZStack {
+                // MARK: Background
                 backgroundVideo
                     .frame(width: w, height: h)
+                
+                // MARK: Characters
                 characters
                     .position(x: w - 200, y: h - 150)
+                
+                // MARK: Next button
+                NextButton(destination: Scene14View())
             }
             .frame(width: .infinity, height: .infinity)
         }

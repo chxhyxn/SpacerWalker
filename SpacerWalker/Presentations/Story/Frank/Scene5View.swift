@@ -99,7 +99,7 @@ struct Scene5View: View {
                 )
             }
             .background(
-                Image("backgroundFrank")
+                Image(phase > 4 ? "5Background" : "backgroundFrank")
                     .resizable()
                     .scaledToFill()
             )
@@ -145,49 +145,19 @@ struct Scene5View: View {
                             phase = 3
                         }
                     } label: {
-                        ZStack {
-                            Circle()
-                                .fill(.buttonBackground)
-                                .overlay(
-                                    Circle()
-                                        .stroke(
-                                            Color.buttonStroke,
-                                            lineWidth: 1
-                                        )
-                                )
-
-                            Image(systemName: "chevron.right")
-                                .font(.system(size: 40, weight: .bold))
-                                .foregroundStyle(.white)
-                        }
-                        .frame(width: 80, height: 80)
+                        NextButtonLabel()
                     }
                 }
                 if phase == 4 {
                     Button {
                         withAnimation {
-                            radiX = screenWidth - radiWidth / 2
-                            cameraState = .right
+//                            radiX = screenWidth - radiWidth / 2
+//                            cameraState = .right
                             phase = 5
                         }
                         AudioService.shared.playNarration(.scene9)
                     } label: {
-                        ZStack {
-                            Circle()
-                                .fill(.buttonBackground)
-                                .overlay(
-                                    Circle()
-                                        .stroke(
-                                            Color.buttonStroke,
-                                            lineWidth: 1
-                                        )
-                                )
-
-                            Image(systemName: "chevron.right")
-                                .font(.system(size: 40, weight: .bold))
-                                .foregroundStyle(.white)
-                        }
-                        .frame(width: 80, height: 80)
+                        NextButtonLabel()
                     }
                 }
                 if phase == 6 {
@@ -195,6 +165,13 @@ struct Scene5View: View {
                 }
             }
             VStack {
+                if phase == 3 {
+                    Image("shakeIPad")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 155)
+                        .padding(58)
+                }
                 Spacer()
                 if phase == 1 || phase == 2 {
                     SubtitleView(

@@ -4,7 +4,11 @@ import SwiftUI
 
 struct IntroView: View {
     var body: some View {
-        Text("Intro")
+        VStack {
+            NavigationLink(value: Route.story) {
+                Text("시작하기")
+            }
+        }
     }
 }
 

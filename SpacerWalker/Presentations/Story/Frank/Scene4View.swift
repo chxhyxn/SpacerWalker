@@ -10,15 +10,15 @@ struct Scene4View: View {
 
     private let narration1: [String] = [
         "This friend’s name is Flare.",
-        "He’s always in such a hurry that he can reach Earth in just 8 minutes, the fastest of the three."
+        "He’s always in such a hurry that he can reach Earth in just 8 minutes, the fastest of the three.",
     ]
-    
+
     private let narration2: [String] = [
         "But Flare is so fast, that every time he passes by, he disrupts Earth’s GPS satellites.",
         "A farmer grumbled, “Oh no, the GPS isn’t working! My field rows are all crooked.",
-        "Flare must have come by again…”"
+        "Flare must have come by again…”",
     ]
-    
+
     @State private var phase: Int = 1
     @State private var showPhase1Button: Bool = false
 
@@ -150,7 +150,7 @@ struct Scene4View: View {
                     NextButton(destination: Scene5View(path: $path))
                 }
             }
-            
+
             VStack {
                 Spacer()
                 if phase == 1 || phase == 2 {
@@ -162,7 +162,7 @@ struct Scene4View: View {
                     .padding(.horizontal, 40)
                     .padding(.bottom, 43)
                 }
-                
+
                 if phase == 5 || phase == 6 {
                     SubtitleView(
                         sentences: narration2,
@@ -185,7 +185,7 @@ struct Scene4View: View {
             }
 
             physicsTask = Task { await runPhysicsLoop() }
-            
+
             AudioService.shared.playNarration(.scene4)
 
             try? await Task.sleep(for: .seconds(5))

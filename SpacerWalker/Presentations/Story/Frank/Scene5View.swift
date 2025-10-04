@@ -7,16 +7,16 @@ struct Scene5View: View {
     @Binding var path: [Route]
 
     private let motionManager = MotionManager()
-    
+
     private let narration1: [String] = [
         "This friend’s name is Radi.",
-        "Radi is messy, always sprinkling cookie crumbs wherever he goes."
+        "Radi is messy, always sprinkling cookie crumbs wherever he goes.",
     ]
-    
+
     private let narration2: [String] = [
         "Oops! Radi dropped crumbs again!",
         "The crumbs got into a spaceship, and the astronaut sighed",
-        "“Not again… now it’s showing errors!”"
+        "“Not again… now it’s showing errors!”",
     ]
 
     @State private var phase: Int = 1
@@ -191,7 +191,7 @@ struct Scene5View: View {
                     .padding(.horizontal, 40)
                     .padding(.bottom, 43)
                 }
-                
+
                 if phase == 5 || phase == 6 {
                     SubtitleView(
                         sentences: narration2,
@@ -213,7 +213,7 @@ struct Scene5View: View {
             }
 
             AudioService.shared.playNarration(.scene7)
-            
+
             try? await Task.sleep(for: .seconds(5))
             phase = 2
         }

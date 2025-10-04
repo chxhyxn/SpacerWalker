@@ -4,7 +4,7 @@ import SwiftUI
 
 struct Scene13View: View {
     @Binding var path: [Route]
-    @State var isNextButton: Bool = false
+    @State var isNextButton: Bool = true
 
     var body: some View {
         ZStack(alignment: .trailing) {
@@ -14,22 +14,11 @@ struct Scene13View: View {
             // MARK: Characters
             characters
 
-            if isNextButton {
-                // MARK: Next button
-                NextButton(destination: Scene14View())
-                    .animFadeIn()
-                    .padding(16)
-            }
+            // MARK: Next button
+            nextButton
         }
         .ignoresSafeArea()
         .navigationBarBackButtonHidden()
-        .onAppear {
-            DispatchQueue.main.asyncAfter(
-                deadline: .now() + 1
-            ) {
-                isNextButton = true
-            }
-        }
     }
 
     var characters: some View {
@@ -55,6 +44,12 @@ struct Scene13View: View {
 
     var backgroundVideo: some View {
         VideoPlayer(path: "CosmicRaysHeliopause")
+    }
+
+    var nextButton: some View {
+        NextButton(destination: Scene14View())
+            .animFadeIn(order: 10, visible: $isNextButton)
+            .padding(16)
     }
 }
 

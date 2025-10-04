@@ -3,11 +3,9 @@
 import SwiftUI
 
 struct Scene15View: View {
-    @Binding var path: [Route]
-
     var body: some View {
         Button {
-            path = []
+            
         } label: {
             Text("인트로로 돌아가기")
         }
@@ -17,5 +15,5 @@ struct Scene15View: View {
 }
 
 #Preview {
-    Scene15View(path: .constant([.story]))
+    Scene15View()
 }

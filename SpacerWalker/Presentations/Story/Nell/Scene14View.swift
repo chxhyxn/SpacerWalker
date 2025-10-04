@@ -8,18 +8,13 @@ struct Scene14View: View {
     @State private var progress: Double = 0.0
     @State private var screenSize: CGSize = .zero
     @State private var friendsXOffset: CGFloat = -200
+    @State private var isNextButton: Bool = false
     private let initDragOffset: CGFloat = 0
     private let dragRatio: CGFloat = 1.25
 
     var body: some View {
         GeometryReader { geo in
-            Color.clear
-                .onAppear {
-                    self.screenSize = geo.size
-                }
-                .onChange(of: geo.size) { _, newSize in
-                    self.screenSize = newSize
-                }
+            initScreenSize(geo)
 
             ZStack(alignment: .bottom) {
                 sky
@@ -33,9 +28,21 @@ struct Scene14View: View {
                 people
 
                 slider
+
+                nextButton
             }
         }
         .ignoresSafeArea()
+    }
+
+    func initScreenSize(_ geo: GeometryProxy) -> some View {
+        Color.clear
+            .onAppear {
+                self.screenSize = geo.size
+            }
+            .onChange(of: geo.size) { _, newSize in
+                self.screenSize = newSize
+            }
     }
 
     var sky: some View {
@@ -96,6 +103,19 @@ struct Scene14View: View {
         .animSlide(offsetY: 350, order: 3)
     }
 
+    var nextButton: some View {
+        VStack {
+            Spacer()
+            HStack {
+                Spacer()
+                NextButton(destination: Scene15View())
+                    .animFadeIn(visible: $isNextButton)
+                    .padding(16)
+            }
+            Spacer()
+        }
+    }
+
     var earth: some View {
         Circle()
             .foregroundColor(.blue)
@@ -117,6 +137,7 @@ struct Scene14View: View {
                             to: 0...(screenSize.width - initDragOffset + 100)
                         )
                         progress = dragOffset / screenSize.width
+                        isNextButton = progress >= 1
                     }
                     .onEnded { _ in
                         lastDragOffset = dragOffset

@@ -31,7 +31,7 @@ class SoundManager {
                 }
             }
 
-            try audioSession.setCategory(.record, mode: .default)
+            try audioSession.setCategory(.playAndRecord, mode: .default, options: [.mixWithOthers, .defaultToSpeaker])
             try audioSession.setActive(true)
 
             let settings: [String: Any] = [

@@ -3,7 +3,6 @@
 import SwiftUI
 
 struct Scene14View: View {
-    @State private var viewModel: Scene14ViewModel = .init()
     @State private var dragOffset: CGFloat = 0
     @State private var lastDragOffset: CGFloat = 0
     @State private var progress: Double = 0.0

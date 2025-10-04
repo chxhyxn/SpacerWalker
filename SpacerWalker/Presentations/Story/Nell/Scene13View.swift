@@ -4,7 +4,7 @@ import SwiftUI
 
 struct Scene13View: View {
     @Binding var path: [Route]
-    @State var viewModel: Scene13ViewModel = .init()
+    @State var isNextButton: Bool = false
 
     var body: some View {
         ZStack(alignment: .trailing) {
@@ -14,7 +14,7 @@ struct Scene13View: View {
             // MARK: Characters
             characters
 
-            if viewModel.isNextButton {
+            if isNextButton {
                 // MARK: Next button
                 NextButton(destination: Scene14View())
                     .animFadeIn()
@@ -27,7 +27,7 @@ struct Scene13View: View {
             DispatchQueue.main.asyncAfter(
                 deadline: .now() + 1
             ) {
-                viewModel.showNextButton()
+                isNextButton = true
             }
         }
     }

@@ -12,6 +12,7 @@ struct Scene15View: View {
             Text("인트로로 돌아가기")
         }
         .navigationBarBackButtonHidden()
+        .autoNarration(.scene15)
     }
 }
 

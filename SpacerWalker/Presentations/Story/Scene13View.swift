@@ -10,6 +10,7 @@ struct Scene13View: View {
             Text("다음")
         }
         .navigationBarBackButtonHidden()
+        .autoNarration(.scene13)
     }
 }
 

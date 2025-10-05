@@ -7,7 +7,7 @@ import UIKit
 struct SpacerWalkerApp: App {
     var body: some Scene {
         WindowGroup {
-            Scene3View(path: .constant([.story]))
+            RootView()
                 .preferredColorScheme(.light)
         }
     }

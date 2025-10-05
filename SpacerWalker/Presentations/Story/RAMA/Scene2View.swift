@@ -21,17 +21,18 @@ struct Scene2View: View {
 
                 Image("sunWithSpot1")
                     .position(x: geo.size.width / 2 + 30, y: geo.size.height)
+                    .animFadeIn(order: 1)
 
                 Image("family").resizable()
                     .scaledToFit()
                     .foregroundStyle(Color.white)
                     .frame(width: 500)
                     .position(x: geo.size.width / 2, y: geo.size.height - 400)
+                    .animFadeIn(order: 1)
 
-                if isNarrationEnd {
-                    NextButton(destination: Scene3View(path: $path))
-                        .position(x: geo.size.width - 60, y: geo.size.height / 2)
-                }
+                NextButton(destination: Scene3View(path: $path))
+                    .position(x: geo.size.width - 60, y: geo.size.height / 2)
+                    .animFadeIn(visible: $isNarrationEnd)
             }
 
             VStack {

@@ -109,6 +109,8 @@ struct Scene4View: View {
             }
             HStack {
                 Spacer()
+
+                // MARK: Phase2 next button
                 if phase == 2 {
                     Button {
                         withAnimation {
@@ -118,9 +120,13 @@ struct Scene4View: View {
                     } label: {
                         NextButtonLabel()
                     }
+                    .animFadeIn()
                 }
+
+                // MARK: Phase6 next button
                 if phase == 6 {
                     NextButton(destination: Scene5View(path: $path))
+                        .animFadeIn()
                 }
             }
 

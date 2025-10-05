@@ -37,7 +37,7 @@ struct Scene3View: View {
                         .resizable()
                         .scaledToFill()
 
-                    if isNarrationEnded {
+                    Group {
                         YearPickerView(value: $value, dragOffset: $dragOffset)
 
                         Image("earth")
@@ -45,6 +45,7 @@ struct Scene3View: View {
                             .frame(width: 110, height: 110)
                             .position(x: circleX, y: circleY)
                     }
+                    .animFadeIn(visible: $isNarrationEnded)
 
                     ZStack {
                         Image("sunWithSpot1")
@@ -62,10 +63,12 @@ struct Scene3View: View {
                         .frame(width: 500)
                         .position(x: geo.size.width / 2, y: geo.size.height - 400)
 
-                    if currentValue >= 100 {
-                        NextButton(destination: Scene4View(path: $path))
-                            .position(x: geo.size.width - 60, y: geo.size.height / 2)
-                    }
+                    NextButton(destination: Scene4View(path: $path))
+                        .position(x: geo.size.width - 60, y: geo.size.height / 2)
+                        .animFadeIn(visible: Binding(
+                            get: { currentValue >= 100 },
+                            set: { _ in }
+                        ))
                 }
                 .navigationBarBackButtonHidden()
                 .contentShape(Rectangle())

@@ -53,7 +53,7 @@ struct Scene1View: View {
                 .offset(y: hermesOffsetY)
                 .scaleEffect(hermesScale)
 
-            if isNarrationEnd {
+            Group {
                 Image(hermesTouchImages[currentHermesIndex])
                     .offset(y: hermesOffsetY)
                     .onTapGesture {
@@ -66,6 +66,7 @@ struct Scene1View: View {
                         .padding(.trailing, 40)
                 }
             }
+            .animFadeIn(visible: $isNarrationEnd)
 
             VStack {
                 Spacer()

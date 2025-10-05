@@ -16,7 +16,13 @@ struct Scene1View: View {
     @State private var rocketScale: CGFloat = 0.8
     @State private var hermesScale: CGFloat = 0.8
     @State private var startNarration: Bool = false
+    @State private var currentHermesIndex: Int = 0
+    @State private var isNarrationEnd = false
+    
+    private let hermesSpeakingImages = ["hermesMovingMouth2", "hermesMovingMouth1", "hermesMovingMouth3"]
 
+    private let animationInterval: TimeInterval = 0.3
+    
     private let riseDuration: Double = 2.5
     private let holdAtCenter: Double = 1.0
     private let rocketExitDuration: Double = 1.0
@@ -32,10 +38,22 @@ struct Scene1View: View {
                 Image(.rocketonloy)
                     .offset(y: rocketOffsetY)
                     .scaleEffect(rocketScale)
+                
+                if !isNarrationEnd {
+                    Image(hermesSpeakingImages[currentHermesIndex])
+                        .offset(y: hermesOffsetY)
+                        .scaleEffect(hermesScale)
+                } else {
+                    ZStack {
+                        Group {
+                            Image("hermesHalo")
+                                .resizable()
+                            Image("hermesReadyToGo")
+                                .resizable()
+                        }
+                    }
+                }
 
-                Image(.hermes)
-                    .offset(y: hermesOffsetY)
-                    .scaleEffect(hermesScale)
 
                 HStack {
                     Spacer()
@@ -51,7 +69,10 @@ struct Scene1View: View {
                     SubtitleView(
                         sentences: narration,
                         typingSpeeds: [0.1, 0.07, 0.06],
-                        holdDurations: [0.8, 0.6]
+                        holdDurations: [0.8, 0.6],
+                        onComplete: {
+                            isNarrationEnd = true
+                        }
                     )
                     .frame(maxWidth: .infinity)
                     .padding(.horizontal, 40)
@@ -64,6 +85,18 @@ struct Scene1View: View {
         .autoNarration(.scene1, delay: riseDuration + holdAtCenter)
         .onAppear {
             Task { await runAnimationSequence() }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 4.0) {
+                startHermesAnimation()
+            }
+        }
+    }
+    
+    private func startHermesAnimation() {
+        Timer.scheduledTimer(withTimeInterval: animationInterval, repeats: true) { _ in
+            if !isNarrationEnd {
+                currentHermesIndex = (currentHermesIndex + 1) % hermesSpeakingImages.count
+            }
         }
     }
 

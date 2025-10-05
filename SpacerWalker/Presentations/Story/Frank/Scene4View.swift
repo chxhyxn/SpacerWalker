@@ -118,18 +118,6 @@ struct Scene4View: View {
                         NextButtonLabel()
                     }
                 }
-                if phase == 4 {
-                    Button {
-                        withAnimation {
-//                            flareX = screenWidth - flareWidth / 2
-//                            cameraState = .right
-                            phase = 5
-                        }
-                        AudioService.shared.playNarration(.scene6)
-                    } label: {
-                        NextButtonLabel()
-                    }
-                }
                 if phase == 6 {
                     NextButton(destination: Scene5View(path: $path))
                 }
@@ -212,7 +200,7 @@ struct Scene4View: View {
     }
 
     private func flarePhysicsStep(dt: Double) {
-        let xMargin = max(screenWidth * 2 - flareWidth / 2, 0)
+        let xMargin = max(screenWidth * 2 + flareWidth / 2, 0)
 
         let accelPerG: CGFloat = 16000
         let dampingPerSecond = 3.0
@@ -231,7 +219,8 @@ struct Scene4View: View {
             }
             if px > xMargin {
                 px = xMargin
-                phase = 4
+                phase = 5
+                AudioService.shared.playNarration(.scene6)
             }
 
             flareX = px

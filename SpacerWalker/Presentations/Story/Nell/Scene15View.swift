@@ -19,7 +19,7 @@ struct Scene15View: View {
     @Binding var path: [Route]
     @State private var screenSize: CGSize = .zero
     @State private var state: SceneState = .appear
-    @State private var time: Double = 0  // time tracker
+    @State private var time: Double = 0 // time tracker
     @State private var radiEyeState: RadiEyeState = .left
     private let narration: [String] = [
         "We call these three friends “Space Weather.”",
@@ -169,7 +169,6 @@ struct Scene15View: View {
                     )
                     .border(.blue)
                     .blur(radius: 74)
-
             }
             .offset(y: -50)
     }

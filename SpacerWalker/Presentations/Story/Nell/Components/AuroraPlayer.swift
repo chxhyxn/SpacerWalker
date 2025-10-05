@@ -6,7 +6,7 @@ struct AuroraPlayerView: View {
     @Binding var progress: Double
 
     var currentImageName: String {
-        let index = (Int(progress * 305.0) + 1).clamped(to: 0...306)
+        let index = (Int(progress * 305.0) + 1).clamped(to: 0 ... 306)
         return "Aurora\(index)"
     }
 

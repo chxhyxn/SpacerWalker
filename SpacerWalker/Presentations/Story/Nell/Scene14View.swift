@@ -64,10 +64,7 @@ struct Scene14View: View {
     }
 
     var aurora: some View {
-        VideoFramePlayer(
-            path: "Aurora",
-            progress: $progress
-        )
+        AuroraPlayerView(progress: $progress)
         .mask {
             HStack {
                 Spacer()
@@ -171,8 +168,8 @@ struct Scene14View: View {
                         dragOffset = (lastDragOffset - w).clamped(
                             to: 0 ... (screenSize.width - initFriendOffset + 100)
                         )
+                        progress = dragOffset / screenSize.width
                         withAnimation {
-                            progress = dragOffset / screenSize.width
                             isNextButton = progress >= 1
                             showDragGuide = progress == 0
                             if progress > 0.5, !isCheerSoundEffectPlaying {

@@ -1,0 +1,1 @@
+ffmpeg -i Aurora.mp4 -q:v 5 frames/Aurora%d.jpg

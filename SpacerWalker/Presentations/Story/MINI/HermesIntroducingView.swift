@@ -4,7 +4,7 @@ import SwiftUI
 
 struct HermesIntroducingView: View {
     @Binding var isPresented: Bool
-    
+
     var body: some View {
         GeometryReader { geometry in
             ZStack {
@@ -13,7 +13,7 @@ struct HermesIntroducingView: View {
                     .onTapGesture {
                         isPresented = false
                     }
-                
+
                 VStack(spacing: 16) {
                     HStack {
                         HStack(spacing: 4) {
@@ -23,7 +23,7 @@ struct HermesIntroducingView: View {
                                     width: 52,
                                     height: 42
                                 )
-                            
+
                             Text("Hermes's Message")
                                 .font(.oneMobile20)
                                 .foregroundColor(.white)
@@ -32,9 +32,9 @@ struct HermesIntroducingView: View {
                                 .background(Color.hermes)
                                 .clipShape(RoundedRectangle(cornerRadius: 8))
                         }
-                        
+
                         Spacer()
-                        
+
                         Button {
                             isPresented = false
                         } label: {
@@ -46,13 +46,13 @@ struct HermesIntroducingView: View {
                                 .clipShape(Circle())
                         }
                     }
-                    
+
                     Image("hermesImage")
                         .resizable()
                         .scaledToFit()
                         .frame(maxWidth: .infinity)
                         .padding(.bottom, 16)
-                    
+
                     Text("Hi! I'm HERMES, the little space weather fairy!")
                         .font(.oneMobile24)
                         .foregroundColor(.black)

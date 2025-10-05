@@ -87,7 +87,7 @@ struct Scene3View: View {
                     InteractionGuideView()
                         .transition(.opacity)
                 }
-                
+
                 if value == 100 {
                     NextButton(destination: Scene4View(path: $path))
                         .position(x: geo.size.width - 60, y: geo.size.height / 2)

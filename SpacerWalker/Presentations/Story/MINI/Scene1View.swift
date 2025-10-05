@@ -20,20 +20,20 @@ struct Scene1View: View {
     @State private var currentHermesIndex: Int = 0
     @State private var isNarrationEnd = false
     @State private var isPopUpPresented = false
-    
+
     private let hermesSpeakingImages = [
         "hermesMovingMouth2",
         "hermesMovingMouth1",
-        "hermesMovingMouth3"
+        "hermesMovingMouth3",
     ]
     private let hermesTouchImages = [
         "hermesTouch1",
         "hermesTouch2",
-        "hermesTouch3"
+        "hermesTouch3",
     ]
 
     private let animationInterval: TimeInterval = 0.3
-    
+
     private let riseDuration: Double = 2.5
     private let holdAtCenter: Double = 1.0
     private let rocketExitDuration: Double = 1.0
@@ -44,32 +44,32 @@ struct Scene1View: View {
                 .resizable()
                 .scaledToFill()
                 .ignoresSafeArea()
-            
+
             Image(.rocketonloy)
                 .offset(y: rocketOffsetY)
                 .scaleEffect(rocketScale)
-            
+
             Image(hermesSpeakingImages[currentHermesIndex])
                 .offset(y: hermesOffsetY)
                 .scaleEffect(hermesScale)
-            
+
             if isNarrationEnd {
                 Image(hermesTouchImages[currentHermesIndex])
                     .offset(y: hermesOffsetY)
                     .onTapGesture {
                         isPopUpPresented = true
                     }
-                
+
                 HStack {
                     Spacer()
                     NextButton(destination: Scene2View(path: $path))
                         .padding(.trailing, 40)
                 }
             }
-            
+
             VStack {
                 Spacer()
-                
+
                 if startNarration {
                     SubtitleView(
                         sentences: narration,
@@ -85,7 +85,7 @@ struct Scene1View: View {
                 }
             }
             .ignoresSafeArea(edges: .bottom)
-            
+
             if isPopUpPresented {
                 HermesIntroducingView(isPresented: $isPopUpPresented)
                     .transition(.opacity)
@@ -95,16 +95,16 @@ struct Scene1View: View {
         .autoNarration(.scene1, delay: riseDuration + holdAtCenter)
         .onAppear {
             Task { await runAnimationSequence() }
-            
+
             DispatchQueue.main.asyncAfter(deadline: .now() + 4.0) {
                 startHermesAnimation()
             }
         }
     }
-    
+
     private func startHermesAnimation() {
         Timer.scheduledTimer(withTimeInterval: animationInterval, repeats: true) { _ in
-                currentHermesIndex = (currentHermesIndex + 1) % hermesSpeakingImages.count
+            currentHermesIndex = (currentHermesIndex + 1) % hermesSpeakingImages.count
         }
     }
 

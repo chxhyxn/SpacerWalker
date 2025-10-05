@@ -36,7 +36,7 @@ struct Scene15View: View {
             initScreenSize(geo)
             ZStack(alignment: .center) {
                 background
-                
+
                 // MARK: Three friends
                 Group {
                     friends

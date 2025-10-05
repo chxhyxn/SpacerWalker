@@ -4,7 +4,7 @@ import SwiftUI
 
 struct Scene2View: View {
     @Binding var path: [Route]
-    
+
     @State private var isNarrationEnd = false
 
     private let narration: [String] = [
@@ -27,13 +27,13 @@ struct Scene2View: View {
                     .foregroundStyle(Color.white)
                     .frame(width: 500)
                     .position(x: geo.size.width / 2, y: geo.size.height - 400)
-                
+
                 if isNarrationEnd {
                     NextButton(destination: Scene3View(path: $path))
                         .position(x: geo.size.width - 60, y: geo.size.height / 2)
                 }
             }
-            
+
             VStack {
                 Spacer()
 

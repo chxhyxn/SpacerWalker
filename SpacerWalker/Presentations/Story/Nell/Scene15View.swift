@@ -26,7 +26,8 @@ struct Scene15View: View {
         "Even though they sometimes cause trouble,",
         "they also paint the sky with beautiful auroras,",
         "and remind us how deeply connected we are to our Sun.",
-        "The Sun’s warmth, its breath, and even its storms all of them work together to keep our planet alive and full of light.",
+        "The Sun’s warmth, its breath,",
+        "and even its storms all of them work together to keep our planet alive and full of light.",
         "So we keep learning how to live together with our Sun’s friends every day.",
     ]
 
@@ -36,47 +37,65 @@ struct Scene15View: View {
             ZStack(alignment: .center) {
                 background
 
-                friends
-                    .animFadeIn(
-                        visible: Binding(
-                            get: { state != .theEnd },
-                            set: { _ in }
-                        )
+                Group {
+                    friends
+                    subtitle
+                }.animFadeIn(
+                    visible: Binding(
+                        get: { state != .theEnd },
+                        set: { _ in }
                     )
+                )
 
-                subtitle
+                // MARK: The End
+                Group {
+                    sun
+                    earth
+                    bottomGradient
+                    theEnd
+                    restartButton
+                }.animSlide(
+                    offsetY: 100,
+                    visible: Binding(
+                        get: { state == .theEnd },
+                        set: { _ in }
+                    )
+                )
             }
         }
         .onAppear {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
-                withAnimation(.easeIn(duration: 0.5)) {
-                    state = .sunglass
-                }
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.8) {
-                withAnimation(.easeIn(duration: 0.2)) {
-                    state = .twingkle
-                }
-            }
-            Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { _ in
-                withAnimation {
-                    switch radiEyeState {
-                    case .left:
-                        radiEyeState = .right
-                    case .right:
-                        radiEyeState = .bottom
-                    case .bottom:
-                        radiEyeState = .left
-                    }
-                }
-            }
+            changeStateTimer()
         }
         .autoNarration(.scene15)
         .ignoresSafeArea()
         .navigationBarBackButtonHidden()
     }
 
-    // MARK: - Circular motion helpers
+    func changeStateTimer() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+            withAnimation(.easeIn(duration: 0.5)) {
+                state = .sunglass
+            }
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.8) {
+            withAnimation(.easeIn(duration: 0.2)) {
+                state = .twingkle
+            }
+        }
+        Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { _ in
+            withAnimation {
+                switch radiEyeState {
+                case .left:
+                    radiEyeState = .right
+                case .right:
+                    radiEyeState = .bottom
+                case .bottom:
+                    radiEyeState = .left
+                }
+            }
+        }
+    }
+
     func circleX(radius: CGFloat, clockwise: Bool) -> CGFloat {
         let direction: CGFloat = clockwise ? 1 : -1
         return sin(time * direction) * radius
@@ -95,6 +114,64 @@ struct Scene15View: View {
             .onChange(of: geo.size) { _, newSize in
                 self.screenSize = newSize
             }
+    }
+
+    var restartButton: some View {
+        VStack {
+            Spacer()
+            Button(action: {
+                path = []
+            }) {
+                HStack(spacing: 16) {
+                    Image("Refresh")
+
+                    Text("RE-START")
+                        .font(.oneMobile40)
+                        .foregroundColor(.black)
+                }
+                .padding(.horizontal, 42)
+                .padding(.vertical, 16)
+            }
+            .background(
+                RoundedRectangle(cornerRadius: 48)
+                    .fill(Color.white)
+            )
+            .padding(.bottom, 82)
+        }
+    }
+
+    var theEnd: some View {
+        Text("THE END")
+            .font(.oneMobile64)
+            .foregroundColor(.white)
+            .background {
+                Ellipse()
+                    .fill(
+                        RadialGradient(
+                            gradient: Gradient(stops: [
+                                .init(
+                                    color: Color.black.opacity(1.0),
+                                    location: 0.0
+                                ),
+                                .init(
+                                    color: Color.black.opacity(0.5),
+                                    location: 1.0
+                                ),
+                            ]),
+                            center: .center,
+                            startRadius: 0,
+                            endRadius: 384.5
+                        )
+                    )
+                    .frame(
+                        width: screenSize.width / 2,
+                        height: screenSize.height / 2
+                    )
+                    .border(.blue)
+                    .blur(radius: 74)
+
+            }
+            .offset(y: -50)
     }
 
     var friends: some View {
@@ -169,7 +246,6 @@ struct Scene15View: View {
     }
 
     var earth: some View {
-        // MARK: Earth
         Image("earth")
             .resizable()
             .scaledToFit()
@@ -269,8 +345,8 @@ struct Scene15View: View {
             Spacer()
             SubtitleView(
                 sentences: narration,
-                typingSpeeds: [0.06, 0.06, 0.06, 0.06, 0.06, 0.06],
-                holdDurations: [0.9, 0.9, 0.9, 0.8, 1.5, 0.8]
+                typingSpeeds: [0.06, 0.06, 0.06, 0.06, 0.06, 0.06, 0.06],
+                holdDurations: [0.9, 0.9, 0.9, 0.8, 0.8, 0.8, 0.8]
             ) {
                 state = .theEnd
             }

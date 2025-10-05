@@ -4,6 +4,8 @@ import SwiftUI
 
 struct Scene2View: View {
     @Binding var path: [Route]
+    
+    @State private var isNarrationEnd = false
 
     private let narration: [String] = [
         "A Long Long time ago, There were the three playful friends on sun.",
@@ -25,18 +27,23 @@ struct Scene2View: View {
                     .foregroundStyle(Color.white)
                     .frame(width: 500)
                     .position(x: geo.size.width / 2, y: geo.size.height - 400)
-
-                NextButton(destination: Scene3View(path: $path))
-                    .position(x: geo.size.width - 60, y: geo.size.height / 2)
+                
+                if isNarrationEnd {
+                    NextButton(destination: Scene3View(path: $path))
+                        .position(x: geo.size.width - 60, y: geo.size.height / 2)
+                }
             }
-
+            
             VStack {
                 Spacer()
 
                 SubtitleView(
                     sentences: narration,
                     typingSpeeds: [0.07, 0.07],
-                    holdDurations: [0.7]
+                    holdDurations: [0.7],
+                    onComplete: {
+                        isNarrationEnd = true
+                    }
                 )
                 .padding(.horizontal, 40)
                 .padding(.bottom, 43)

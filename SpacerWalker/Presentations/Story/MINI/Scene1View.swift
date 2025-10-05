@@ -8,18 +8,29 @@ struct Scene1View: View {
     private let narration: [String] = [
         "Hi there! I’m HERMES.",
         "I’m a little fairy who observes space weather.",
-        "Today, I’d like to tell you a fun story about the Sun and its three best friends.",
+        "Today, I’d like to tell you a fun story about the Sun and its three best friends. (Touch Hermes!)",
     ]
 
     @State private var rocketOffsetY: CGFloat = 1200
     @State private var hermesOffsetY: CGFloat = 1200
     @State private var rocketScale: CGFloat = 0.8
     @State private var hermesScale: CGFloat = 0.8
+    @State private var touchScale: CGFloat = 0.8
     @State private var startNarration: Bool = false
     @State private var currentHermesIndex: Int = 0
     @State private var isNarrationEnd = false
+    @State private var isPopUpPresented = false
     
-    private let hermesSpeakingImages = ["hermesMovingMouth2", "hermesMovingMouth1", "hermesMovingMouth3"]
+    private let hermesSpeakingImages = [
+        "hermesMovingMouth2",
+        "hermesMovingMouth1",
+        "hermesMovingMouth3"
+    ]
+    private let hermesTouchImages = [
+        "hermesTouch1",
+        "hermesTouch2",
+        "hermesTouch3"
+    ]
 
     private let animationInterval: TimeInterval = 0.3
     
@@ -33,38 +44,32 @@ struct Scene1View: View {
                 .resizable()
                 .scaledToFill()
                 .ignoresSafeArea()
-
-            ZStack {
-                Image(.rocketonloy)
-                    .offset(y: rocketOffsetY)
-                    .scaleEffect(rocketScale)
-                
-                if !isNarrationEnd {
-                    Image(hermesSpeakingImages[currentHermesIndex])
-                        .offset(y: hermesOffsetY)
-                        .scaleEffect(hermesScale)
-                } else {
-                    ZStack {
-                        Group {
-                            Image("hermesHalo")
-                                .resizable()
-                            Image("hermesReadyToGo")
-                                .resizable()
-                        }
+            
+            Image(.rocketonloy)
+                .offset(y: rocketOffsetY)
+                .scaleEffect(rocketScale)
+            
+            Image(hermesSpeakingImages[currentHermesIndex])
+                .offset(y: hermesOffsetY)
+                .scaleEffect(hermesScale)
+            
+            if isNarrationEnd {
+                Image(hermesTouchImages[currentHermesIndex])
+                    .offset(y: hermesOffsetY)
+                    .onTapGesture {
+                        isPopUpPresented = true
                     }
-                }
-
-
+                
                 HStack {
                     Spacer()
                     NextButton(destination: Scene2View(path: $path))
                         .padding(.trailing, 40)
                 }
             }
-
+            
             VStack {
                 Spacer()
-
+                
                 if startNarration {
                     SubtitleView(
                         sentences: narration,
@@ -80,6 +85,11 @@ struct Scene1View: View {
                 }
             }
             .ignoresSafeArea(edges: .bottom)
+            
+            if isPopUpPresented {
+                HermesIntroducingView(isPresented: $isPopUpPresented)
+                    .transition(.opacity)
+            }
         }
         .navigationBarBackButtonHidden()
         .autoNarration(.scene1, delay: riseDuration + holdAtCenter)
@@ -94,9 +104,7 @@ struct Scene1View: View {
     
     private func startHermesAnimation() {
         Timer.scheduledTimer(withTimeInterval: animationInterval, repeats: true) { _ in
-            if !isNarrationEnd {
                 currentHermesIndex = (currentHermesIndex + 1) % hermesSpeakingImages.count
-            }
         }
     }
 

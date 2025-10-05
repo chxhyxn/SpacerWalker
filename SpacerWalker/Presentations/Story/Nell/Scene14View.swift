@@ -3,6 +3,7 @@
 import SwiftUI
 
 struct Scene14View: View {
+    @Binding var path: [Route]
     @State private var dragOffset: CGFloat = 0
     @State private var lastDragOffset: CGFloat = 0
     @State private var progress: Double = 0.0
@@ -139,7 +140,7 @@ struct Scene14View: View {
             Spacer()
             HStack {
                 Spacer()
-                NextButton(destination: Scene15View())
+                NextButton(destination: Scene15View(path: $path))
                     .animFadeIn(visible: $isNextButton)
                     .padding(16)
             }
@@ -197,5 +198,5 @@ extension Comparable {
 }
 
 #Preview {
-    Scene14View()
+    Scene14View(path: .constant([.story]))
 }

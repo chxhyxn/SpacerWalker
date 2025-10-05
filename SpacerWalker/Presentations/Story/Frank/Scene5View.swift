@@ -148,18 +148,6 @@ struct Scene5View: View {
                         NextButtonLabel()
                     }
                 }
-                if phase == 4 {
-                    Button {
-                        withAnimation {
-//                            radiX = screenWidth - radiWidth / 2
-//                            cameraState = .right
-                            phase = 5
-                        }
-                        AudioService.shared.playNarration(.scene9)
-                    } label: {
-                        NextButtonLabel()
-                    }
-                }
                 if phase == 6 {
                     NextButton(destination: Scene6View(path: $path))
                 }
@@ -218,7 +206,7 @@ struct Scene5View: View {
 
     private func handleShake() async {
         if phase == 3 {
-            let xMargin = max(screenWidth * 2 - radiWidth / 2, 0)
+            let xMargin = max(screenWidth * 2 + radiWidth / 2, 0)
 
             withAnimation(.easeOut(duration: 0.1)) {
                 radiX += 100
@@ -234,8 +222,9 @@ struct Scene5View: View {
             radiDeltaY *= -1
             if radiX == xMargin {
                 withAnimation {
-                    phase = 4
+                    phase = 5
                 }
+                AudioService.shared.playNarration(.scene9)
             }
         }
         try? await Task.sleep(for: .seconds(0.1))

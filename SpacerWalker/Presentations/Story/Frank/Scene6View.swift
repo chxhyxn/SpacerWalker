@@ -20,6 +20,8 @@ struct Scene6View: View {
     ]
 
     @State private var phase: Int = 1
+    
+    @State private var blinkBackgroundCount: Int = 0
 
     //    private let screenWidth: CGFloat = 1210
     //    private let screenHeight: CGFloat = 835
@@ -86,7 +88,7 @@ struct Scene6View: View {
                 )
             }
             .background(
-                Image(phase > 4 ? "6Background" : "backgroundFrank")
+                Image(phase > 4 && blinkBackgroundCount % 20 > 10 ? "6Background" : "backgroundFrank")
                     .resizable()
                     .scaledToFill()
             )
@@ -150,19 +152,6 @@ struct Scene6View: View {
                         NextButtonLabel()
                     }
                 }
-                if phase == 4 {
-                    Button {
-                        withAnimation {
-//                            cmeX = screenWidth - cmeWidth / 2
-//                            cmeAngle = 0
-//                            cameraState = .right
-                            phase = 5
-                        }
-                        AudioService.shared.playNarration(.scene12)
-                    } label: {
-                        NextButtonLabel()
-                    }
-                }
                 if phase == 6 {
                     NextButton(destination: Scene13View(path: $path))
                 }
@@ -208,6 +197,7 @@ struct Scene6View: View {
             AudioService.shared.playNarration(.scene10)
         }
         .onReceive(soundDetectTimer) { _ in
+            blinkBackgroundCount += 1
             if hasTriggeredWind { return }
             if phase != 3 { return }
             if soundManager == nil { soundManager = SoundManager() }
@@ -225,7 +215,7 @@ struct Scene6View: View {
     }
 
     private func handleWindDetect() async {
-        let xMargin = max(screenWidth * 2 - cmeWidth / 2, 0)
+        let xMargin = max(screenWidth * 2 + cmeWidth / 2, 0)
         var step = 0
 
         while cmeX < xMargin {
@@ -237,8 +227,9 @@ struct Scene6View: View {
         }
 
         withAnimation {
-            phase = 4
+            phase = 5
             cmeAngle = 0
+            AudioService.shared.playNarration(.scene12)
         }
     }
 

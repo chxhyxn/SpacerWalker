@@ -178,7 +178,9 @@ struct Scene4View: View {
     }
 
     private func isLandscapeLeftInterface() -> Bool {
-        if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+        if let scene = UIApplication.shared.connectedScenes.first
+            as? UIWindowScene
+        {
             return scene.interfaceOrientation == .landscapeLeft
         }
         return false

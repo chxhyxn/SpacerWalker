@@ -10,7 +10,7 @@ struct Scene3View: View {
 
     @Binding var path: [Route]
 
-    @State private var isNarrationEnded = true
+    @State private var isNarrationEnded = false
     @State private var showGuide = false
     @State private var value: Double = 0
     @State private var dragOffset: CGFloat = 0
@@ -120,7 +120,7 @@ struct Scene3View: View {
         }
         .background(Color.black.opacity(0.9))
         .ignoresSafeArea()
-//        .autoNarration(.scene3)
+        .autoNarration(.scene3)
     }
 }
 

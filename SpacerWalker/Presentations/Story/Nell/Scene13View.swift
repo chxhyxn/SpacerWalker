@@ -4,7 +4,7 @@ import SwiftUI
 
 struct Scene13View: View {
     @Binding var path: [Route]
-    @State var isNextButton: Bool = true
+    @State var isNextButton: Bool = false
     private let narration: [String] = [
         "But guess what…",
         "The three friends are parts of the Sun’s powerful forces.",
@@ -48,7 +48,9 @@ struct Scene13View: View {
                 sentences: narration,
                 typingSpeeds: [0.06, 0.06, 0.06, 0.06, 0.06],
                 holdDurations: [0.8, 1.1, 0.9, 0.8, 0.8]
-            )
+            ) {
+                isNextButton = true
+            }
             .padding(.horizontal, 40)
             .padding(.bottom, 43)
         }

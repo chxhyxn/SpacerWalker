@@ -15,18 +15,30 @@ struct Scene13View: View {
 
     var body: some View {
         ZStack(alignment: .trailing) {
-            // MARK: Background
             backgroundVideo
 
-            // MARK: Next button
             nextButton
 
-            // MARK: Subtitle
             subtitle
+            
+            licenses
         }
         .ignoresSafeArea()
         .navigationBarBackButtonHidden()
         .autoNarration(.scene13)
+    }
+    
+    var licenses: some View {
+        VStack {
+            Spacer()
+            HStack {
+                Spacer()
+                Text("Credit NASA")
+                    .foregroundColor(.white)
+                    .opacity(0.5)
+                    .padding(16)
+            }
+        }
     }
 
     var subtitle: some View {

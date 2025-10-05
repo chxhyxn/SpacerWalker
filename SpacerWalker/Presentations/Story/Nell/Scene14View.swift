@@ -29,7 +29,7 @@ struct Scene14View: View {
                 friends
 
                 people
-                
+
                 licenses
 
                 slider
@@ -45,7 +45,7 @@ struct Scene14View: View {
             }
         }
     }
-    
+
     var licenses: some View {
         HStack {
             Spacer()

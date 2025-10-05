@@ -88,8 +88,10 @@ struct Scene3View: View {
                         .transition(.opacity)
                 }
 
-                NextButton(destination: Scene4View(path: $path))
-                    .position(x: geo.size.width - 60, y: geo.size.height / 2)
+                if value == 100 {
+                    NextButton(destination: Scene4View(path: $path))
+                        .position(x: geo.size.width - 60, y: geo.size.height / 2)
+                }
             }
 
             VStack {
@@ -103,7 +105,7 @@ struct Scene3View: View {
                         onComplete: {
                             isNarrationEnded = true
                             showGuide = true
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                                 withAnimation {
                                     showGuide = false
                                 }

@@ -20,14 +20,14 @@ struct Scene13View: View {
             nextButton
 
             subtitle
-            
+
             licenses
         }
         .ignoresSafeArea()
         .navigationBarBackButtonHidden()
         .autoNarration(.scene13)
     }
-    
+
     var licenses: some View {
         VStack {
             Spacer()

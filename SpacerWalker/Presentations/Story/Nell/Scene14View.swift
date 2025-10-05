@@ -29,6 +29,8 @@ struct Scene14View: View {
                 friends
 
                 people
+                
+                licenses
 
                 slider
 
@@ -41,6 +43,16 @@ struct Scene14View: View {
             if isCheerSoundEffectPlaying {
                 audioService.stopSoundEffect()
             }
+        }
+    }
+    
+    var licenses: some View {
+        HStack {
+            Spacer()
+            Text("Created by midjourney")
+                .foregroundColor(.white)
+                .opacity(0.5)
+                .padding(16)
         }
     }
 

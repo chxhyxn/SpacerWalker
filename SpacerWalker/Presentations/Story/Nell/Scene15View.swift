@@ -36,7 +36,8 @@ struct Scene15View: View {
             initScreenSize(geo)
             ZStack(alignment: .center) {
                 background
-
+                
+                // MARK: Three friends
                 Group {
                     friends
                     subtitle
@@ -236,8 +237,10 @@ struct Scene15View: View {
     }
 
     var sun: some View {
-        // MARK: Sun
         Image("sunWithSpot4")
+            .resizable()
+            .scaledToFit()
+            .frame(width: screenSize.width * 0.7)
             .offset(
                 x: -screenSize.width * 0.21,
                 y: screenSize.height * 0.5

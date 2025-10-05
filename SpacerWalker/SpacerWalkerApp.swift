@@ -3,15 +3,8 @@
 import SwiftUI
 import UIKit
 
-final class AppDelegate: NSObject, UIApplicationDelegate {
-    func application(_: UIApplication, supportedInterfaceOrientationsFor _: UIWindow?) -> UIInterfaceOrientationMask {
-        return .landscapeRight
-    }
-}
-
 @main
 struct SpacerWalkerApp: App {
-    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     var body: some Scene {
         WindowGroup {
             RootView()

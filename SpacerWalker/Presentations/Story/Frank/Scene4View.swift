@@ -2,6 +2,7 @@
 
 internal import Combine
 import SwiftUI
+import UIKit
 
 struct Scene4View: View {
     @Binding var path: [Route]
@@ -176,9 +177,21 @@ struct Scene4View: View {
         .navigationBarBackButtonHidden()
     }
 
+    private func isLandscapeLeftInterface() -> Bool {
+        if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            return scene.interfaceOrientation == .landscapeLeft
+        }
+        return false
+    }
+
     private func handleTiltVector(_ vec: CGVector) async {
         let deadzone: CGFloat = 0.02
-        let uy = abs(vec.dy) < deadzone ? 0 : CGFloat(vec.dy)
+
+        let isLandscapeLeft = await MainActor.run { isLandscapeLeftInterface() }
+
+        let raw = CGFloat(vec.dy)
+        let adjusted = isLandscapeLeft ? -raw : raw
+        let uy = abs(adjusted) < deadzone ? 0 : adjusted
 
         let smoothing: CGFloat = 0.15
         flareTiltAccel.dy = flareTiltAccel.dy * (1 - smoothing) + uy * smoothing

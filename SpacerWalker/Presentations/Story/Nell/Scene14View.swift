@@ -9,6 +9,7 @@ struct Scene14View: View {
     @State private var progress: Double = 0.0
     @State private var screenSize: CGSize = .zero
     @State private var friendsXOffset: CGFloat = -200
+    @State private var friend2XOffset: CGFloat = -200
     @State private var isNextButton: Bool = false
     @State private var showDragGuide: Bool = true
     @State private var isCheerSoundEffectPlaying: Bool = false
@@ -64,20 +65,17 @@ struct Scene14View: View {
     }
 
     var aurora: some View {
-        VideoFramePlayer(
-            path: "Aurora",
-            progress: $progress
-        )
-        .mask {
-            HStack {
-                Spacer()
-                Rectangle()
-                    .frame(
-                        width: max(0, dragOffset + initFriendOffset),
-                        height: screenSize.height
-                    )
+        AuroraPlayerView(progress: $progress)
+            .mask {
+                HStack {
+                    Spacer()
+                    Rectangle()
+                        .frame(
+                            width: max(0, dragOffset + initFriendOffset),
+                            height: screenSize.height
+                        )
+                }
             }
-        }
     }
 
     var friends: some View {
@@ -88,7 +86,7 @@ struct Scene14View: View {
                     x: screenSize.width - dragOffset - 200,
                     y: 150
                 )
-                .animFadeIn(order: 10, visible: $showDragGuide)
+                .animFadeIn(order: 12, visible: $showDragGuide)
 
             // MARK: White line
             Rectangle()
@@ -100,28 +98,39 @@ struct Scene14View: View {
                 )
 
             // MARK: Friends
-            Image("AuroraFriends")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 208)
-                .overlay {
-                    // MARK: Guide
-                    Image("Scene15Guide")
-                        .position(x: -150, y: 200)
-                        .animFadeIn(order: 8, visible: $showDragGuide)
-                }
-                .position(
-                    x: screenSize.width - dragOffset - initFriendOffset - 78
-                        - friendsXOffset,
-                    y: screenSize.height / 3
-                )
-                .onAppear {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        withAnimation(.easeOut(duration: 0.25)) {
-                            friendsXOffset = 0
-                        }
+            ZStack {
+                Image("AuroraFriend2")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .offset(x: -friend2XOffset)
+                Image("AuroraFriend1")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+            }
+            .frame(width: 208)
+            .overlay {
+                // MARK: Guide
+                Image("Scene15Guide")
+                    .position(x: -150, y: 250)
+                    .animFadeIn(order: 12, visible: $showDragGuide)
+            }
+            .position(
+                x: screenSize.width - dragOffset - initFriendOffset - 78
+                    - friendsXOffset,
+                y: screenSize.height / 3
+            )
+            .onAppear {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    withAnimation(.easeOut(duration: 0.25)) {
+                        friendsXOffset = 0
                     }
                 }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
+                    withAnimation(.easeOut(duration: 0.25)) {
+                        friend2XOffset = 0
+                    }
+                }
+            }
         }
     }
 
@@ -169,10 +178,10 @@ struct Scene14View: View {
                         // MARK: Drag start
                         let w = value.translation.width * dragRatio
                         dragOffset = (lastDragOffset - w).clamped(
-                            to: 0 ... (screenSize.width - initFriendOffset + 100)
+                            to: 0...(screenSize.width - initFriendOffset + 100)
                         )
+                        progress = dragOffset / screenSize.width
                         withAnimation {
-                            progress = dragOffset / screenSize.width
                             isNextButton = progress >= 1
                             showDragGuide = progress == 0
                             if progress > 0.5, !isCheerSoundEffectPlaying {

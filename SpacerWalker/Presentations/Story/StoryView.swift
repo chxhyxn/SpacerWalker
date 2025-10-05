@@ -6,6 +6,6 @@ struct StoryView: View {
     @Binding var path: [Route]
 
     var body: some View {
-        Scene15View(path: $path)
+        Scene1View(path: $path)
     }
 }

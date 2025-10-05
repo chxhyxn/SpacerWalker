@@ -20,7 +20,7 @@ struct Scene6View: View {
     ]
 
     @State private var phase: Int = 1
-    
+
     @State private var blinkBackgroundCount: Int = 0
 
     //    private let screenWidth: CGFloat = 1210
